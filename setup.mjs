@@ -18,13 +18,19 @@ class setup {
 		try {
 			await setup.copyFiles(setup.vsCodeSnippets, path.join(setup.targetDir, setup.vscode));
 			await setup.copyFiles(setup.neinthStarterFolder, path.join(setup.targetDir, setup.neinth));
-			await setup.copyFiles(setup.configFileSrc, path.join(setup.targetDir, setup.configFile));
+			await setup.copyTopFile(setup.configFileSrc, path.join(setup.targetDir, setup.configFile));
 			console.log('✅ Starter neinth setup complete!');
 		} catch (err) {
 			console.error('❌ Error setting up neinth:', err);
 		}
 	};
-
+	/**
+	 * @param {string} src
+	 * @param {string} dest
+	 */
+	static copyTopFile = async (src, dest) => {
+		await fs.copyFile(src, dest);
+	};
 	/**
 	 * @param {string} src
 	 * @param {string} dest

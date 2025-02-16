@@ -1,0 +1,38 @@
+{
+	// Place your neinth workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	"import_": {
+		"scope": "javascript",
+		"prefix": "neinthImport_",
+		"body": [
+			"/**",
+			" * @type {import('${1:path}')['default']}",
+			" */",
+			"const ${0:varName} = await import_('${1:path}');"
+		],
+		"description": "import_"
+	},
+	"tsImport_": {
+		"scope": "typescript",
+		"prefix": "neinthtsImport_",
+		"body": [
+			"import type ${2:typeName} from '${1:path}';",
+			"const ${0:varName}: ${2:typeName} = await import_('${1:path}');"
+		],
+		"description": "tsImport_"
+	}
+}

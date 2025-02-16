@@ -102,7 +102,7 @@ export class Neinth {
 				error: error_,
 				configFile,
 				message: 'configFile is badly formed;',
-				solution: 'configFile must export default instance of neinthManage;',
+				solution: 'configFile must export default instance of `neinthManage`;',
 			});
 			return;
 		}

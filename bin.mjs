@@ -2,6 +2,6 @@
 
 // @ts-check
 
-import { Neinth } from './src/main/Neinth.mjs';
+import { Neinth } from 'neinth';
 
 new Neinth();

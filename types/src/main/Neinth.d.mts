@@ -83,4 +83,4 @@ export class Neinth {
     private configName;
     run: () => Promise<void>;
 }
-import { neinth } from 'neinth';
+import { neinth } from './neinth.export.mjs';

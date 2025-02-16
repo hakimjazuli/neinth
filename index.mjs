@@ -24,7 +24,11 @@
  * - when everything is ready, you can run on your terminal:
  * 
  * ```shell
- * neinth
+ * npx neinth
+ * ```
+ * or
+ * ```shell
+ * bunx neinth
  * ```
  * 
  */

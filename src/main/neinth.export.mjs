@@ -2,7 +2,7 @@
 
 import { join } from 'path';
 import { _QueueFIFO, _QueueObjectFIFO } from '@html_first/simple_queue';
-import { Neinth } from 'neinth';
+import { Neinth } from './Neinth.mjs';
 
 /**
  * @description

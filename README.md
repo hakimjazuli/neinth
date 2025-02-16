@@ -17,7 +17,11 @@ it is important to use `npm`, so you can get starter project;
 - when everything is ready, you can run on your terminal:
 
 ```shell
-neinth
+npx neinth
+```
+or
+```shell
+bunx neinth
 ```
 
 ## exported-api

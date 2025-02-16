@@ -3,9 +3,9 @@
 import chokidar from 'chokidar';
 import { dirname, join } from 'path';
 import { rmSync, existsSync, writeFileSync, mkdirSync } from 'fs';
-import { neinthManage } from 'neinth';
+import { neinthManage } from './neinthManage.export.mjs';
 import { _Queue, _QueueObject } from '@html_first/simple_queue';
-import { neinth } from 'neinth';
+import { neinth } from './neinth.export.mjs';
 import { Q } from '../queue/Q.mjs';
 
 export class Neinth {

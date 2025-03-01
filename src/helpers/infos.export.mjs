@@ -98,20 +98,20 @@ export class infos {
 		const this_ = this;
 		return {
 			/**
-			 * @type {string|false}
+			 * @type {string|undefined}
 			 */
 			get withDot() {
 				if (this_.isDirectory && !this_.isFile) {
-					return false;
+					return undefined;
 				}
 				return extname(this_._fullPath);
 			},
 			/**
-			 * @type {string|false}
+			 * @type {string|undefined}
 			 */
 			get noDot() {
 				if (this_.isDirectory && !this_.isFile) {
-					return false;
+					return undefined;
 				}
 				return extname(this_._fullPath).replace(/^\./, '');
 			},
@@ -155,11 +155,11 @@ export class infos {
 	 */
 	_rawContent;
 	/**
-	 * @type {string|false}
+	 * @type {string|undefined}
 	 */
 	get content() {
 		if (this.isDirectory && !this.isFile) {
-			return false;
+			return undefined;
 		}
 		if (!this._rawContent) {
 			this._rawContent = readFileSync(this._fullPath, this._encoding);
@@ -167,7 +167,7 @@ export class infos {
 		return this._rawContent;
 	}
 	/**
-	 * @type {false|Promise<any>}
+	 * @type {undefined|Promise<any>}
 	 */
 	get importAsModuleJS() {
 		const realTimePath = `${this._fullPath}?${Date.now()}`;
@@ -184,6 +184,6 @@ export class infos {
 			return importedModule;
 		}
 		console.error({ error, timeStamp: Date.now() });
-		return false;
+		return undefined;
 	}
 }

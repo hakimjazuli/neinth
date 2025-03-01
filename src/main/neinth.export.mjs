@@ -36,8 +36,8 @@ import { infos } from 'neinth';
  * >- `stringWithIndent`: replace all new line with given `indent`, usefull to generate code that written to the language where indentation dictates the interpreter/compiler direction (eg. python);
  * >- `normalizePath`: replace path back-slash '\\' to forward-slash '/';
  * >- `relativeToProjectAbsolute`: as it is named, and also auto process the string with `normalizePath`;
- * >- `importNeinth`: generate `Signal` of returned value of the imported neinth callback, at first the value is set to be `false`;
- * >- `getInfos`: generate `Signal<Set<infos>>`, at first the value is set to be `false`;
+ * >- `importNeinth`: generate `Signal` of returned value of the imported neinth callback, at first the value is set to be `undefined`;
+ * >- `getInfos`: generate `Signal<Set<infos>>`, at first the value is set to be `undefined`;
  * >- `onCleanUp`: add callback to `neinth` `cleanUp` event;
  * - `cleanUp` event are called during changes of `neinth` instance file, including `add`, `change` and `unlink`;
  * - `neinth` callback argument is basically an effect (vivth $), that will autosubscribe to the `SignalInstance.value` `getter` you access inside it;
@@ -45,7 +45,7 @@ import { infos } from 'neinth';
  */
 /**
  * @template DataType
- * @type {Signal<false|DataType>}
+ * @type {Signal<undefined|DataType>}
  */
 export class neinth extends Signal {
 	/**
@@ -55,7 +55,7 @@ export class neinth extends Signal {
 	 * @param {(neinthInstance:neinth["options"])=>Promise<DataType>} handler
 	 */
 	constructor(handler) {
-		super(false);
+		super(undefined);
 		/**
 		 * @private
 		 * @type {$}
@@ -105,11 +105,11 @@ export class neinth extends Signal {
 			/**
 			 * @template {neinthPath} neinthPath
 			 * @param {neinthPath} neinthPath
-			 * @return {Signal<false|import('neinth').getNeinth<neinthPath>>}
+			 * @return {Signal<undefined|import('neinth').getNeinth<neinthPath>>}
 			 */
 			importNeinth: (neinthPath) => {
 				if (!neinth.mappedSignals.has(neinthPath)) {
-					neinth.mappedSignals.set(neinthPath, NewSignal(false));
+					neinth.mappedSignals.set(neinthPath, NewSignal(undefined));
 				}
 				const signal = neinth.mappedSignals.get(neinthPath);
 				// @ts-expect-error
@@ -119,7 +119,7 @@ export class neinth extends Signal {
 			 * @param {string} relativePathFromProjectRoot
 			 * @param {{file:boolean, dir:boolean}} mode
 			 * @param {BufferEncoding} [encoding]
-			 * @returns {Signal<false|Set<infos>>}
+			 * @returns {Signal<undefined|Set<infos>>}
 			 */
 			getInfos: (relativePathFromProjectRoot, { file, dir }, encoding = 'utf8') => {
 				if (neinth.mappedInfos.has(relativePathFromProjectRoot)) {
@@ -127,9 +127,9 @@ export class neinth extends Signal {
 				}
 				const absolutePath = join(runtime.projectRoot, relativePathFromProjectRoot);
 				/**
-				 * @type {Signal<false|Set<infos>>}
+				 * @type {Signal<undefined|Set<infos>>}
 				 */
-				const signal = NewSignal(false);
+				const signal = NewSignal(undefined);
 				neinth.mappedInfos.set(relativePathFromProjectRoot, signal);
 				this_.signals.add(signal);
 				const watcher = chokidar.watch(absolutePath);
@@ -156,7 +156,7 @@ export class neinth extends Signal {
 	}
 	/**
 	 * @private
-	 * @type {Map<string, Signal<false|Set<infos>>>}
+	 * @type {Map<string, Signal<undefined|Set<infos>>>}
 	 */
 	static mappedInfos = new Map();
 	/**
@@ -252,7 +252,7 @@ export class neinth extends Signal {
 		});
 	};
 	/**
-	 * @type {Map<neinthPath, Signal<false|import('neinth').getNeinth<neinthPath>>>}
+	 * @type {Map<neinthPath, Signal<undefined|import('neinth').getNeinth<neinthPath>>>}
 	 */
 	static mappedSignals = new Map();
 
@@ -348,7 +348,7 @@ export class neinth extends Signal {
 	};
 	/**
 	 * @param {neinthPath} neinthPath
-	 * @param {neinth|false} currentInstance
+	 * @param {neinth|undefined} currentInstance
 	 * @returns {Promise<void>}
 	 */
 	static onAddOrChange = async (neinthPath, currentInstance) => {

@@ -64,7 +64,7 @@ export class runtime {
 			},
 			timeStamp: Date.now(),
 		});
-		return false;
+		return undefined;
 	};
 	/**
 	 * @type {string}
@@ -90,7 +90,7 @@ export class runtime {
 		let watchPath;
 		let [_, error] = await tryAsync(async () => {
 			let configFile = await runtime.importModuleDefault(runtime.configName);
-			if (configFile === false) {
+			if (configFile === undefined) {
 				configFile = new neinthConfig({ folderPath: './neinth' });
 			}
 			if (!(configFile instanceof neinthConfig)) {

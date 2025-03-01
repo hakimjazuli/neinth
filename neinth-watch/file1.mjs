@@ -1,3 +1,3 @@
 // @ts-check
 
-export default { nama: 'file1_' };
+export default { nama: 'file1' };

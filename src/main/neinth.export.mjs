@@ -4,6 +4,7 @@ import chokidar, { FSWatcher } from 'chokidar';
 import {
 	existsSync,
 	readdirSync,
+	readFile,
 	readFileSync,
 	rmdirSync,
 	rmSync,
@@ -33,6 +34,7 @@ import { infos } from 'neinth';
  * ```
  * - `options` are collections of `functions` that are essential and integrated to the `neinth` functionalities such as it's auto `cleanUp`:
  * >- `writeFile`: safely write files and monitor it's produced filepath, if the name changed for any reason, the old one will be removed;
+ * >- `getFileContent`: safely read file content, returns [string, Error|undefined];
  * >- `stringWithIndent`: replace all new line with given `indent`, usefull to generate code that written to the language where indentation dictates the interpreter/compiler direction (eg. python);
  * >- `normalizePath`: replace path back-slash '\\' to forward-slash '/';
  * >- `relativeToProjectAbsolute`: as it is named, and also auto process the string with `normalizePath`;
@@ -75,17 +77,18 @@ export class neinth extends Signal {
 			/**
 			 * @param {Object} options
 			 * @param {string} options.relativePathFromProjectRoot
-			 * @param {Object} options.content
-			 * @param {string} options.content.string
-			 * @param {{[key:string]:string}} [options.content.modifier]
+			 * @param {Object} options.template
+			 * @param {string}[ options.template.string]
+			 * @param {{[globalMultilineRegexString:string]:string}} [options.template.modifier]
 			 * @param { BufferEncoding | null | undefined } [options.encoding]
 			 * @returns {void}
 			 */
-			writeFile: ({ relativePathFromProjectRoot, content, encoding = 'utf8' }) => {
+			writeFile: ({ relativePathFromProjectRoot, template, encoding = 'utf8' }) => {
 				this_.currentWritten.add(relativePathFromProjectRoot);
-				const fullPath = join(runtime.projectRoot, relativePathFromProjectRoot);
-				const contentModifier = content.modifier ?? {};
-				let content_ = content.string;
+				const projectRoot = runtime.projectRoot;
+				const fullPath = join(projectRoot, relativePathFromProjectRoot);
+				const contentModifier = template.modifier ?? {};
+				let content_ = template.string ?? '';
 				if (contentModifier) {
 					for (const oldString in contentModifier) {
 						const newString = contentModifier[oldString];
@@ -95,11 +98,20 @@ export class neinth extends Signal {
 				runtime.writeFileSafe(fullPath, content_, encoding);
 			},
 			/**
+			 * @param {string} realtivePathToProjectRoot
+			 * @param {BufferEncoding} [encoding]
+			 * @returns {[string, Error|undefined]}
+			 */
+			getFileContent: (realtivePathToProjectRoot, encoding = 'utf8') =>
+				trySync(() =>
+					readFileSync(join(runtime.projectRoot, realtivePathToProjectRoot), { encoding })
+				),
+			/**
 			 * @param {string} string
 			 * @param {string} indent
 			 * @returns {string}
 			 */
-			stringWithIndent: (string, indent) => string.replace(/^/g, indent),
+			stringWithIndent: (string, indent) => string.replace(/^/gm, indent),
 			normalizePath: runtime.normalizePath,
 			relativeToProjectAbsolute: runtime.relativeToProjectAbsolute,
 			/**

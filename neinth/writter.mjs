@@ -10,19 +10,13 @@ export default new neinth(async ({ writeFile, importNeinth }) => {
 	const path = `/neinth-test/${value.className}.php`;
 	writeFile({
 		relativePathFromProjectRoot: path,
-		content: {
-			string: `<?php
-
-	class PHPCLASSNAME {
-		static $haha = '';
-		static $FUNCTIONDEF;
-	}
-	`,
+		template: {
+			string: '/dev/test.php',
 			modifier: {
 				PHPCLASSNAME: value.className,
 				['static \\$FUNCTIONDEF;']: `static function hehe() {
-					// code from content.modifier;
-			}`,
+		// code from content.modifier;
+}`,
 			},
 		},
 	});

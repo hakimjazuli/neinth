@@ -10,7 +10,7 @@ export default new neinth(async ({ writeFile, getInfos }) => {
 	infos.forEach((a) => {
 		writeFile({
 			relativePathFromProjectRoot: `/neinth-test/reflect/${a.baseName.withExt}`,
-			content: { string: a.content ?? '' },
+			template: { string: a.content ?? '' },
 		});
 	});
 });

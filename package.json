@@ -5,15 +5,15 @@
 	"main": "index.mjs",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "concurrently \"bun --watch ./dev/documentation.mjs\" \"bun tsc --watch\"",
+		"dev": "bun --watch ./dev/documentation.mjs",
 		"postinstall": "node setup.mjs"
 	},
 	"bin": {
 		"neinth": "bin.mjs"
 	},
 	"dependencies": {
-		"@html_first/simple_queue": "^1.3.1",
-		"chokidar": "^4.0.3"
+		"chokidar": "^4.0.3",
+		"vivth": "^0.9.1"
 	},
 	"devDependencies": {
 		"@html_first/js_lib_template": "link:@html_first/js_lib_template",
@@ -36,6 +36,5 @@
 	"bugs": {
 		"url": "https://github.com/hakimjazuli/neinth/issues"
 	},
-	"homepage": "https://github.com/hakimjazuli/neinth#readme",
-	"types": "./types/index.d.mts"
+	"homepage": "https://github.com/hakimjazuli/neinth#readme"
 }

@@ -7,6 +7,7 @@
  * @description
  * ## neinth code manager
  * is a simple code management library;
+ * it helps you generates code programatically;
  * 
  * ## how to install
  * import using npm
@@ -15,13 +16,10 @@
  * ```
  * it is important to use `npm`, so you can get starter project;
  * 
- * ## snippet
- * - `neinthImport_` can be used inside neinth instance declaration for typehintin of `neinth` managed imports;
- * 
  * ## how to use
- * - refer to [neinthManage](#neinthmanage) for `configuration`;
- * - refer to [neinth](#neinth) for `file handlers`;
- * - when everything is ready, you can run on your terminal:
+ * - refer to [neintConfig](#neinthconfig) for `configuration`;
+ * - refer to [neinth](#neinth) for handling your logic;
+ * - you can run on your terminal, to starts watching your changes on your `neinth` instances (`export` as `default`) on your `neinthConfig.folderPath`:
  * 
  * ```shell
  * npx neinth
@@ -30,9 +28,16 @@
  * ```shell
  * bunx neinth
  * ```
+ * - neinth only support `.mjs` extention out of the box, but you can still use `.ts` or `.mts` by generating `.mjs` files inside the `neinthConfig.folderPath`
  * 
  */
+export { infos } from './src/helpers/infos.export.mjs';
 export { neinth } from './src/main/neinth.export.mjs';
-export { Neinth } from './src/main/Neinth.mjs';
-export { neinthManage } from './src/main/neinthManage.export.mjs';
-export { Q } from './src/queue/Q.mjs';
+export { neinthConfig } from './src/neinthConfig.export.mjs';
+/**
+ * @template {neinthList} neinthPath
+ * @typedef {import('./src/list/neinthList.mjs').getNeinth<neinthPath>} getNeinth
+ */
+/**
+ * @typedef {import('./src/list/neinthList.mjs').neinthList} neinthList
+ */

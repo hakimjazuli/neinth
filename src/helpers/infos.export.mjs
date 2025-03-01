@@ -1,0 +1,189 @@
+// @ts-check
+
+import { runtime } from '../runtime.mjs';
+import { Dirent, statSync, readFileSync, Stats } from 'fs';
+import { basename, join, relative, extname, dirname } from 'path';
+import { trySync } from 'vivth';
+
+/**
+ * @description
+ * - class typeHelper for file infos using `neinth` options, `getInfos`;
+ * - containts `Dirent` and additional usefull property for the returned `file/dir`;
+ */
+export class infos {
+	/**
+	 *
+	 * @param {Dirent} dirent
+	 * @param {BufferEncoding} [encoding]
+	 */
+	constructor(dirent, encoding = 'utf-8') {
+		this.dirent = dirent;
+		/**
+		 * @private
+		 */
+		this._fullPath = join(dirent.parentPath, dirent.name);
+		/**
+		 * @private
+		 */
+		this._relativePath = relative(runtime.projectRoot, this._fullPath);
+		/**
+		 * @private
+		 */
+		this._encoding = encoding;
+	}
+	/**
+	 * @boolean
+	 */
+	get isFile() {
+		return this.stats.isFile();
+	}
+	/**
+	 * @boolean
+	 */
+	get isDirectory() {
+		return this.stats.isDirectory();
+	}
+	get baseName() {
+		const this_ = this;
+		return {
+			/**
+			 * @type {string}
+			 */
+			get withExt() {
+				return basename(this_._fullPath);
+			},
+			/**
+			 * @type {string}
+			 */
+			get noExt() {
+				return basename(this_._fullPath, extname(this_._fullPath));
+			},
+		};
+	}
+	get path() {
+		const this_ = this;
+		return {
+			/**
+			 * @type {string}
+			 */
+			get relative() {
+				return this_._relativePath;
+			},
+			/**
+			 * @type {string}
+			 */
+			get full() {
+				return this_._fullPath;
+			},
+		};
+	}
+	get dirName() {
+		const this_ = this;
+		return {
+			/**
+			 * @type {string}
+			 */
+			get relative() {
+				return relative(process.cwd(), dirname(this_._fullPath));
+			},
+			/**
+			 * @type {string}
+			 */
+			get full() {
+				return dirname(this_._fullPath);
+			},
+		};
+	}
+	get ext() {
+		const this_ = this;
+		return {
+			/**
+			 * @type {string|false}
+			 */
+			get withDot() {
+				if (this_.isDirectory && !this_.isFile) {
+					return false;
+				}
+				return extname(this_._fullPath);
+			},
+			/**
+			 * @type {string|false}
+			 */
+			get noDot() {
+				if (this_.isDirectory && !this_.isFile) {
+					return false;
+				}
+				return extname(this_._fullPath).replace(/^\./, '');
+			},
+		};
+	}
+	/**
+	 * @private
+	 * @type {Stats}
+	 */
+	_stats;
+	/**
+	 * @private
+	 * @returns {Stats}
+	 */
+	get stats() {
+		if (!this._stats) {
+			this._stats = statSync(this._fullPath);
+		}
+		return this._stats;
+	}
+	get timeStamp() {
+		const this_ = this;
+		return {
+			/**
+			 * @type {number}
+			 */
+			get lastModified() {
+				return this_.stats.mtimeMs;
+			},
+			/**
+			 * @type {number}
+			 */
+			get createdAt() {
+				return this_.stats.birthtimeMs;
+			},
+		};
+	}
+	/**
+	 * @private
+	 * @type {string}
+	 */
+	_rawContent;
+	/**
+	 * @type {string|false}
+	 */
+	get content() {
+		if (this.isDirectory && !this.isFile) {
+			return false;
+		}
+		if (!this._rawContent) {
+			this._rawContent = readFileSync(this._fullPath, this._encoding);
+		}
+		return this._rawContent;
+	}
+	/**
+	 * @type {false|Promise<any>}
+	 */
+	get importAsModuleJS() {
+		const realTimePath = `${this._fullPath}?${Date.now()}`;
+		let [importedModule, error] = trySync(async () => {
+			return import(`file://${realTimePath}`);
+		});
+		if (!error) {
+			return importedModule;
+		}
+		[importedModule, error] = trySync(() => {
+			return import(realTimePath);
+		});
+		if (!error) {
+			return importedModule;
+		}
+		console.error({ error, timeStamp: Date.now() });
+		return false;
+	}
+}

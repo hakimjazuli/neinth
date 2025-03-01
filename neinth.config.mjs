@@ -1,7 +1,7 @@
 // @ts-check
 
-import { neinthManage } from 'neinth';
+import { neinthConfig } from 'neinth';
 
-export default new neinthManage({
+export default new neinthConfig({
 	folderPath: './neinth',
 });

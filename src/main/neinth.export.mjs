@@ -11,7 +11,7 @@ import {
 	writeFileSync,
 } from 'fs';
 import { dirname, join } from 'path';
-import { New$, NewPingFIFO, NewPingUnique, NewSignal, Signal, trySync } from 'vivth';
+import { New$, NewPingUnique, NewSignal, Signal, trySync } from 'vivth';
 import { runtime } from '../runtime.mjs';
 import { $ } from 'vivth';
 import { infos } from 'neinth';

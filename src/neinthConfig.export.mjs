@@ -14,6 +14,10 @@
  * - if by some chance, it's not generated (or you insall it using other than `npm` and the `postinstall` script of `neinth` is not executed for security reason), you can download it from the `npm` file and dirs above;
  */
 export class neinthConfig {
+	/**
+	 * @param {Object} options
+	 * @param {string} options.folderPath
+	 */
 	constructor({ folderPath }) {
 		this.folderPath = folderPath;
 	}

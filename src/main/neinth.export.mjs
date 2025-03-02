@@ -132,7 +132,6 @@ export class neinth extends Signal {
 				 */
 				const signal = NewSignal(undefined);
 				neinth.mappedInfos.set(relativePathFromProjectRoot, signal);
-				this_.signals.add(signal);
 				const watcher = chokidar.watch(absolutePath);
 				neinth.watchers.set(relativePathFromProjectRoot, watcher);
 				watcher.on('all', () => {

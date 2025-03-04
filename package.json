@@ -13,7 +13,7 @@
 	},
 	"dependencies": {
 		"chokidar": "^4.0.3",
-		"vivth": "^0.9.1"
+		"vivth": "^0.9.2"
 	},
 	"devDependencies": {
 		"@html_first/js_lib_template": "link:@html_first/js_lib_template",

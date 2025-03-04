@@ -5,7 +5,7 @@
       "name": "neinth",
       "dependencies": {
         "chokidar": "^4.0.3",
-        "vivth": "^0.9.1",
+        "vivth": "^0.9.2",
       },
       "devDependencies": {
         "@html_first/js_lib_template": "link:@html_first/js_lib_template",
@@ -79,7 +79,7 @@
 
     "undici-types": ["undici-types@6.20.0", "", {}, "sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg=="],
 
-    "vivth": ["vivth@0.9.1", "", {}, "sha512-qi14VaPNYKPfY0dMeXviGMNOt4LRtuv9Ry2+1GAJF7+tRtsbaRLSEFlUV2y0E4gkGtIug+i8wQUr39eXQtSA8g=="],
+    "vivth": ["vivth@0.9.2", "", {}, "sha512-XZoj8Sr6h8rYcUys6QfkKYSPC6vhwYHD+C+/h7tltHCbxD/exNAu1If7PhTjiTuqqSDIwZXHHQzE5ZRnIfYVLw=="],
 
     "wrap-ansi": ["wrap-ansi@7.0.0", "", { "dependencies": { "ansi-styles": "^4.0.0", "string-width": "^4.1.0", "strip-ansi": "^6.0.0" } }, "sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q=="],
 

@@ -135,9 +135,13 @@ export class neinth extends Signal {
 				const watcher = chokidar.watch(absolutePath);
 				neinth.watchers.set(relativePathFromProjectRoot, watcher);
 				watcher.on('all', () => {
-					NewPingUnique(`neinth.getInfos${relativePathFromProjectRoot}`, async () => {
-						signal.value = runtime.getInfos(absolutePath, { file, dir }, encoding);
-					});
+					NewPingUnique(
+						`neinth.getInfos${relativePathFromProjectRoot}`,
+						async () => {
+							signal.value = runtime.getInfos(absolutePath, { file, dir }, encoding);
+						},
+						100
+					);
 				});
 				this_.cleanUps.add(() => {
 					watcher.removeAllListeners();

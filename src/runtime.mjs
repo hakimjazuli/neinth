@@ -194,7 +194,7 @@ export class runtime {
 				runtime.getInfos(entryPath, { file, dir }, encoding, result);
 			}
 			if (entry.isFile() && file) {
-				result.add(new infos(entry));
+				result.add(new infos(entry, encoding));
 			}
 		}
 		return result;

@@ -3,6 +3,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { tryAsync } from 'vivth';
 
 class setup {
 	static __filename = fileURLToPath(import.meta.url);
@@ -15,7 +16,7 @@ class setup {
 	static configFileSrc = path.join(setup.__dirname, setup.configFile);
 	static targetDir = process.env.INIT_CWD || process.cwd();
 	static run = async () => {
-		try {
+		const [_, error] = await tryAsync(async () => {
 			await setup.copyFiles(setup.neinthStarterFolder, path.join(setup.targetDir, setup.neinth));
 			await setup.copyFiles(
 				setup.neinthWatchStarterFolder,
@@ -23,7 +24,8 @@ class setup {
 			);
 			await setup.copyTopFile(setup.configFileSrc, path.join(setup.targetDir, setup.configFile));
 			console.log('✅ Starter neinth setup complete!');
-		} catch (error) {
+		});
+		if (error) {
 			console.error('❌ Error setting up neinth:', error);
 		}
 	};

@@ -184,18 +184,23 @@ export class runtime {
 	 * @returns {Set<infos>}
 	 */
 	static getInfos = (currentPath, { file, dir }, encoding = 'utf8', result = new Set()) => {
-		const entries = readdirSync(currentPath, { withFileTypes: true });
-		for (const entry of entries) {
-			const entryPath = join(currentPath, entry.name);
-			if (entry.isDirectory()) {
-				if (dir) {
+		const [_, error] = trySync(() => {
+			const entries = readdirSync(currentPath, { withFileTypes: true });
+			for (const entry of entries) {
+				const entryPath = join(currentPath, entry.name);
+				if (entry.isDirectory()) {
+					if (dir) {
+						result.add(new infos(entry, encoding));
+					}
+					runtime.getInfos(entryPath, { file, dir }, encoding, result);
+				}
+				if (entry.isFile() && file) {
 					result.add(new infos(entry, encoding));
 				}
-				runtime.getInfos(entryPath, { file, dir }, encoding, result);
 			}
-			if (entry.isFile() && file) {
-				result.add(new infos(entry, encoding));
-			}
+		});
+		if (error) {
+			console.error({ error, currentPath, message: 'failed to `read` dir `currentPath`' });
 		}
 		return result;
 	};

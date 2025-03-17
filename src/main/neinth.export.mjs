@@ -293,12 +293,13 @@ export class neinth extends Signal {
 			if (!clearAll && this.currentWritten.has(path_)) {
 				return;
 			}
-			try {
+			const [_, error] = trySync(() => {
 				rmSync(fullPath);
 				console.info({ fullPath, success: 'remove `fullPath`', timeStamp: Date.now() });
 				this.prevWritten.delete(path_);
 				neinth.deleteEmptyDir(dirname(fullPath));
-			} catch (error) {
+			});
+			if (error) {
 				console.error({ error, fullPath, failed: 'remove `fullPath`', timeStamp: Date.now() });
 			}
 		});

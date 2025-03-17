@@ -161,10 +161,19 @@ export class infos {
 		if (this.isDirectory && !this.isFile) {
 			return undefined;
 		}
-		if (!this._rawContent) {
-			this._rawContent = readFileSync(this._fullPath, this._encoding);
+		const [raw, error] = trySync(() => {
+			return readFileSync(this._fullPath, this._encoding);
+		});
+		if (!error) {
+			this._rawContent = raw;
+			return this._rawContent;
 		}
-		return this._rawContent;
+		console.error({
+			error,
+			fullPath: this._fullPath,
+			message: 'failed to read fullPath',
+		});
+		return undefined;
 	}
 	/**
 	 * @type {undefined|Promise<any>}

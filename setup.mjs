@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // @ts-check
 
 import { promises as fs } from 'fs';

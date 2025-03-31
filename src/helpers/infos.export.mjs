@@ -1,6 +1,6 @@
 // @ts-check
 
-import { runtime } from '../runtime.mjs';
+import { runtime } from '../runtime.export.mjs';
 import { Dirent, statSync, readFileSync, Stats } from 'fs';
 import { basename, join, relative, extname, dirname } from 'path';
 import { trySync } from 'vivth';

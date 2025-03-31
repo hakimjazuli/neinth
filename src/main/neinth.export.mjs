@@ -12,7 +12,7 @@ import {
 } from 'fs';
 import { dirname, join } from 'path';
 import { New$, NewPingUnique, NewSignal, Signal, trySync } from 'vivth';
-import { runtime } from '../runtime.mjs';
+import { runtime } from '../runtime.export.mjs';
 import { $ } from 'vivth';
 import { infos } from 'neinth';
 

@@ -5,15 +5,16 @@
 	"main": "index.mjs",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "bun --watch ./dev/documentation.mjs",
-		"postinstall": "node setup.mjs"
+		"dev": "bun --watch ./dev/documentation.mjs"
 	},
 	"bin": {
-		"neinth": "bin.mjs"
+		"neinth": "bin.mjs",
+		"neinth-starter": "setup.mjs"
 	},
 	"dependencies": {
 		"chokidar": "^4.0.3",
-		"vivth": "^0.9.2"
+		"vivth": "^0.9.2",
+		"xixth": "^0.10.7"
 	},
 	"devDependencies": {
 		"@html_first/js_lib_template": "link:@html_first/js_lib_template",

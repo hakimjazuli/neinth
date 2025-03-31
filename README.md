@@ -3,11 +3,11 @@ is a simple code management library;
 it helps you generates code programatically;
 
 ## how to install
-import using npm
 ```shell
 npm i neinth
+npx neinth-starter
 ```
-it is important to use `npm`, so you can get starter project;
+you might need to stick to single package manager to run the binary
 
 ## how to use
 - refer to [neintConfig](#neinthconfig) for `configuration`;
@@ -16,10 +16,6 @@ it is important to use `npm`, so you can get starter project;
 
 ```shell
 npx neinth
-```
-or
-```shell
-bunx neinth
 ```
 - neinth only support `.mjs` extention out of the box, but you can still use `.ts` or `.mts` by generating `.mjs` files inside the `neinthConfig.folderPath`
 
@@ -41,6 +37,6 @@ bunx neinth
 
 <h2 id="neinthconfig">neinthConfig</h2>
 
-- class helper to setup config on the `projectRoot`, instantiate at `neinth.config.mjs`;- it should be automatically added to your `projectRoot` if you are using `npm` to `install`:```shellnpm i neinth```- includes>- ./neinth.config.mjs>- ./neinth/>- ./neinth-watch/- if by some chance, it's not generated (or you insall it using other than `npm` and the `postinstall` script of `neinth` is not executed for security reason), you can download it from the `npm` file and dirs above;
+- class helper to setup config on the `projectRoot`, instantiate at `neinth.config.mjs`;- includes>- ./neinth.config.mjs>- ./neinth/>- ./neinth-watch/
 
 *) <sub>[go to exported list](#exported-helpers)</sub>

@@ -10,11 +10,11 @@
  * it helps you generates code programatically;
  * 
  * ## how to install
- * import using npm
  * ```shell
  * npm i neinth
+ * npx neinth-starter
  * ```
- * it is important to use `npm`, so you can get starter project;
+ * you might need to stick to single package manager to run the binary
  * 
  * ## how to use
  * - refer to [neintConfig](#neinthconfig) for `configuration`;
@@ -24,16 +24,13 @@
  * ```shell
  * npx neinth
  * ```
- * or
- * ```shell
- * bunx neinth
- * ```
  * - neinth only support `.mjs` extention out of the box, but you can still use `.ts` or `.mts` by generating `.mjs` files inside the `neinthConfig.folderPath`
  * 
  */
 export { infos } from './src/helpers/infos.export.mjs';
 export { neinth } from './src/main/neinth.export.mjs';
 export { neinthConfig } from './src/neinthConfig.export.mjs';
+export { runtime } from './src/runtime.export.mjs';
 /**
  * @template {neinthList} neinthPath
  * @typedef {import('./src/list/neinthList.mjs').getNeinth<neinthPath>} getNeinth

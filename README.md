@@ -10,7 +10,7 @@ npx neinth-starter
 you might need to stick to single package manager to run the binary
 
 ## how to use
-- refer to [neintConfig](#neinthconfig) for `configuration`;
+- refer to [neinthConfig](#neinthconfig) for `configuration`;
 - refer to [neinth](#neinth) for handling your logic;
 - you can run on your terminal, to starts watching your changes on your `neinth` instances (`export` as `default`) on your `neinthConfig.folderPath`:
 

@@ -11,14 +11,12 @@ import {
 	writeFileSync,
 } from 'fs';
 import { dirname, join } from 'path';
-import { New$, NewPingUnique, NewSignal, Signal, trySync } from 'vivth';
+import { $, New$, NewPingUnique, NewSignal, Signal, trySync } from 'vivth';
 import { runtime } from '../runtime.export.mjs';
-import { $ } from 'vivth';
 import { infos } from 'neinth';
 
 /**
  * @description
- * - export `neinth` instance as default on your `neinthConfig` `folderPath` (only supports `.mjs` file extention);
  * ```js
  * // @ts-check
  * import { neinth } from 'neinth';
@@ -113,7 +111,6 @@ export class neinth extends Signal {
 					neinth.mappedSignals.set(neinthPath, NewSignal(undefined));
 				}
 				const signal = neinth.mappedSignals.get(neinthPath);
-				// @ts-expect-error
 				return signal;
 			},
 			/**
@@ -160,7 +157,7 @@ export class neinth extends Signal {
 	}
 	/**
 	 * @private
-	 * @type {Map<string, Signal<undefined|Set<infos>>>}
+	 * @type {Map<string, ReturnType<neinth["options"]["importNeinth"]>>}
 	 */
 	static mappedInfos = new Map();
 	/**

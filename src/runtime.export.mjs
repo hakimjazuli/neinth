@@ -11,7 +11,6 @@ import {
 	mkdirSync,
 	statSync,
 } from 'fs';
-import { neinthConfig } from './neinthConfig.export.mjs';
 import { NewPingUnique, tryAsync, trySync } from 'vivth';
 import { neinth } from './main/neinth.export.mjs';
 import { join, dirname } from 'path';
@@ -88,7 +87,7 @@ export class runtime {
 	 * @private
 	 * @type {string}
 	 */
-	static configName = 'neinth.config.mjs';
+	static folderPath = './neinth-src';
 	/**
 	 * @private
 	 * @returns {Promise<void>}
@@ -96,16 +95,9 @@ export class runtime {
 	static run = async () => {
 		let watchPath;
 		let [_, error] = await tryAsync(async () => {
-			let configFile = await runtime.importModuleDefault(runtime.configName);
-			if (configFile === undefined) {
-				configFile = new neinthConfig({ folderPath: './neinth' });
-			}
-			if (!(configFile instanceof neinthConfig)) {
-				return;
-			}
-			watchPath = join(runtime.projectRoot, configFile.folderPath);
+			watchPath = join(runtime.projectRoot, runtime.folderPath);
 			chokidar
-				.watch(configFile.folderPath)
+				.watch(runtime.folderPath)
 				.on('unlink', runtime.onUnlink)
 				.on('add', runtime.onAddOrChange)
 				.on('change', runtime.onAddOrChange);

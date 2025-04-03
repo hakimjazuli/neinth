@@ -1,8 +1,8 @@
 // @ts-check
 /**
- * @typedef {'neinth/lib.mjs'|'neinth/watcher.mjs'|'neinth/writter.mjs'} neinthList
+ * @typedef {'neinth-src/neinth/config/configs.mjs'|'neinth-src/neinth/core/Configs.mjs'|'neinth-src/neinth/core/watcher.mjs'|'neinth-src/neinth/core/writer.mjs'} neinthList
  */
 /**
  * @template {neinthList} neinthPath
- * @typedef {neinthPath extends'neinth/lib.mjs'?import('D:/M/fdr/web/lib/neinth/neinth/lib.mjs')['default']['DataType']:neinthPath extends'neinth/watcher.mjs'?import('D:/M/fdr/web/lib/neinth/neinth/watcher.mjs')['default']['DataType']:neinthPath extends'neinth/writter.mjs'?import('D:/M/fdr/web/lib/neinth/neinth/writter.mjs')['default']['DataType']:void} getNeinth;
+ * @typedef {neinthPath extends'neinth-src/neinth/config/configs.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/config/configs.mjs')['default']['DataType']:neinthPath extends'neinth-src/neinth/core/Configs.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/Configs.mjs')['default']['DataType']:neinthPath extends'neinth-src/neinth/core/watcher.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/watcher.mjs')['default']['DataType']:neinthPath extends'neinth-src/neinth/core/writer.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/writer.mjs')['default']['DataType']:void} getNeinth;
  */

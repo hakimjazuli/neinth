@@ -4,21 +4,23 @@
     "": {
       "name": "neinth",
       "dependencies": {
+        "@html_first/js_lib_template": "^2.0.16",
         "chokidar": "^4.0.3",
         "vivth": "^0.9.2",
         "xixth": "^0.10.7",
       },
       "devDependencies": {
-        "@html_first/js_lib_template": "link:@html_first/js_lib_template",
         "@types/bun": "latest",
         "concurrently": "^9.1.2",
         "neinth": "link:neinth",
-        "typescript": "^5.7.3",
+        "typescript": "^5.8.2",
       },
     },
   },
   "packages": {
-    "@html_first/js_lib_template": ["@html_first/js_lib_template@link:@html_first/js_lib_template", {}],
+    "@html_first/js_lib_template": ["@html_first/js_lib_template@2.0.16", "", { "peerDependencies": { "@html_first/simple_queue": "^1.3.0", "chokidar": "^3.6.0", "concurrently": "^9.0.0", "typescript": "^5.0.0" } }, "sha512-4Lnigy6mWrgRAnZtD8h243r0QnRvZmHmgMB5rwupaR/IgGJS4xpJkOgxMKQbZfnK82K8s6n/iVEpEH1Ao2iO7Q=="],
+
+    "@html_first/simple_queue": ["@html_first/simple_queue@1.3.1", "", {}, "sha512-YidSXC9aTa0iQAxOA9NIAQWtKp/PU6IwLU+tvlDV62FAy2vwa3/SdpvaMFkBS+3/3t0qOKQ8mZYesDWdhY9Yig=="],
 
     "@types/bun": ["@types/bun@1.2.2", "", { "dependencies": { "bun-types": "1.2.2" } }, "sha512-tr74gdku+AEDN5ergNiBnplr7hpDp3V1h7fqI2GcR/rsUaM39jpSeKH0TFibRvU0KwniRx5POgaYnaXbk0hU+w=="],
 
@@ -76,7 +78,7 @@
 
     "tslib": ["tslib@2.8.1", "", {}, "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="],
 
-    "typescript": ["typescript@5.7.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw=="],
+    "typescript": ["typescript@5.8.2", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ=="],
 
     "undici-types": ["undici-types@6.20.0", "", {}, "sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg=="],
 

@@ -8,18 +8,20 @@
 		"dev": "bun --watch ./dev/documentation.mjs"
 	},
 	"bin": {
+		"neinth-test-cli": "test-cli.mjs",
 		"neinth": "bin.mjs",
-		"neinth-starter": "setup.mjs"
+		"neinth-starter": "bin-starter.mjs",
+		"neinth-package": "bin-package.mjs"
 	},
 	"dependencies": {
+		"@html_first/js_lib_template": "^2.0.16",
 		"chokidar": "^4.0.3",
 		"vivth": "^0.9.2",
 		"xixth": "^0.10.7"
 	},
 	"devDependencies": {
-		"@html_first/js_lib_template": "link:@html_first/js_lib_template",
 		"concurrently": "^9.1.2",
-		"typescript": "^5.7.3",
+		"typescript": "^5.8.2",
 		"@types/bun": "latest",
 		"neinth": "link:neinth"
 	},

@@ -14,7 +14,7 @@ npx neinth-starter -p your-package-name
 - installation:
 ```shell
 npm link your-package-name
-npx neinth-package -i -p your-package-name
+npx neinth-package -p your-package-name -i
 ```
 - update:
 ```shell
@@ -24,7 +24,7 @@ npx neinth-package -p your-package-name
 - installation:
 ```shell
 npm i your-package-name
-npx neinth-package -i -p your-package-name
+npx neinth-package -p your-package-name -i
 ```
 - update:
 ```shell

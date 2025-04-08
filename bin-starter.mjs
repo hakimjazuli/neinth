@@ -6,8 +6,8 @@ import { renameSync, readFileSync, writeFileSync } from 'fs';
 import { trySync } from 'vivth';
 
 const packageName = 'neinth';
-let goToRename = false;
-let autoDocSucced = false;
+let goToRename = true;
+let autoDocSucced = true;
 
 new xixth({
 	packageName: 'neinth',
@@ -16,8 +16,8 @@ new xixth({
 			src: 'neinth-src',
 			dest: 'neinth-src',
 			on: {
-				async success() {
-					goToRename = true;
+				async failed() {
+					goToRename = false;
 				},
 			},
 		},
@@ -38,9 +38,9 @@ new xixth({
 			src: 'dev',
 			dest: 'dev',
 			on: {
-				async success() {
+				async failed() {
 					console.log('🆗 successfully added `auto-documentation` to your `dev folder`');
-					autoDocSucced = true;
+					autoDocSucced = false;
 				},
 			},
 		},

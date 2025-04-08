@@ -6,6 +6,7 @@ import { trySync } from 'vivth';
 import { writeFileSync, readFileSync } from 'fs';
 
 let autoDocSucced = false;
+
 /**
  * @param {string} packagePath
  * @param {string} packageName
@@ -19,17 +20,76 @@ const update = (packagePath, packageName) => {
 				src: corePath,
 				dest: corePath,
 				on: {
-					async failed() {
-						console.error(`🚫 \`neinth\` failed to update ${packageName}`);
+					async failed({ src, dest }) {
+						console.error(`🚫 \`neinth\` failed to update "${src}" to "${dest}"`);
 					},
-					async success() {
-						console.log(`🆗 \`neinth\` successfully update ${packageName}`);
+					async success({ dest }) {
+						console.log(`🆗 \`neinth\` successfully update "${dest}"`);
 					},
 				},
 			},
 		},
 	});
 	return;
+};
+
+/**
+ * @param {string} packageName
+ * @param {string} packagePath
+ */
+const install = (packagePath, packageName) => {
+	new xixth({
+		packageName,
+		pathCopyHandlers: {
+			'neinth-auto-doc': {
+				src: 'dev',
+				dest: 'dev',
+				on: {
+					async success() {
+						console.log('🆗 successfully add `auto-documentation` to your `dev folder`');
+						autoDocSucced = true;
+					},
+				},
+			},
+			src: {
+				src: packagePath,
+				dest: packagePath,
+				on: {
+					async failed({ src, dest }) {
+						console.error(`🚫 \`neinth\` failed to copy "${src}" to "${dest}"`);
+					},
+					async success({ dest }) {
+						console.log(`🆗 \`neinth\` successfully copy "${dest}"`);
+					},
+				},
+			},
+		},
+		flagCallbacks: {
+			async afterCopy() {
+				if (autoDocSucced) {
+					const [, error] = trySync(() => {
+						const packageJsonPath = this.generateProjectAbsolutePath('package.json');
+						const packageJsonString = readFileSync(packageJsonPath).toString();
+						const packageJsonObj = JSON.parse(packageJsonString);
+						const newScripts = {
+							'auto-doc': `node --watch ./dev/${packageName}/auto-doc.mjs`,
+						};
+						writeFileSync(
+							packageJsonPath,
+							JSON.stringify({
+								...packageJsonObj,
+								scripts: { ...packageJsonObj['scripts'], ...newScripts },
+							}),
+							'utf-8'
+						);
+					});
+					if (error) {
+						console.error(error);
+					}
+				}
+			},
+		},
+	});
 };
 
 new xixth({
@@ -60,58 +120,7 @@ new xixth({
 				update(packagePath, packageName);
 				return;
 			}
-			new xixth({
-				packageName,
-				pathCopyHandlers: {
-					'neinth-auto-doc': {
-						src: 'dev/neinth/auto-doc.mjs',
-						dest: 'dev/neinth/auto-doc.mjs',
-						on: {
-							async success() {
-								console.log('🆗 successfully added `auto-documentation` to your `dev folder`');
-								autoDocSucced = true;
-							},
-						},
-					},
-					src: {
-						src: packagePath,
-						dest: packagePath,
-						on: {
-							async failed({ src, dest }) {
-								console.error(`🚫 \`neinth\` failed to install ${packageName} from ${packagePath}`);
-							},
-							async success({ src, dest }) {
-								console.log(`🆗 \`neinth\` successfully install ${packageName}`);
-							},
-						},
-					},
-				},
-				flagCallbacks: {
-					async afterCopy() {
-						if (autoDocSucced) {
-							const [, error] = trySync(() => {
-								const packageJsonPath = this.generateProjectAbsolutePath('package.json');
-								const packageJsonString = readFileSync(packageJsonPath).toString();
-								const packageJsonObj = JSON.parse(packageJsonString);
-								const newScripts = {
-									'auto-doc': 'node --watch ./dev/neinth/auto-doc.mjs',
-								};
-								writeFileSync(
-									packageJsonPath,
-									JSON.stringify({
-										...packageJsonObj,
-										scripts: { ...packageJsonObj['scripts'], ...newScripts },
-									}),
-									'utf-8'
-								);
-							});
-							if (error) {
-								console.error(error);
-							}
-						}
-					},
-				},
-			});
+			install(packagePath, packageName);
 		},
 	},
 });

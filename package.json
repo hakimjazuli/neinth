@@ -21,8 +21,7 @@
 	"devDependencies": {
 		"concurrently": "^9.1.2",
 		"typescript": "^5.8.2",
-		"@types/bun": "latest",
-		"neinth": "link:neinth"
+		"@types/bun": "latest"
 	},
 	"repository": {
 		"type": "git",

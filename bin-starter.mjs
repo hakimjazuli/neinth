@@ -71,8 +71,8 @@ new xixth({
 					console.error(error);
 				}
 			}
-			const packageName_ = `neinth-src/${packageName}}`;
-			const realPackageName = `neinth-src/${p}}`;
+			const packageName_ = `neinth-src/${packageName}`;
+			const realPackageName = `neinth-src/${p}`;
 			const [, error] = trySync(() => {
 				renameSync(
 					this.generateProjectAbsolutePath(packageName_),

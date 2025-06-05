@@ -15,6 +15,20 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
+	"generate neinth module": {
+		"scope": "javascript",
+		"prefix": ">>neinth_module",
+		"body": [
+			"// @ts-check",
+			"",
+			"import { neinth } from 'neinth';",
+			"",
+			"export default new neinth(async ({ ${1:} }) => {",
+			"\t${0:// code}",
+			"});"
+		],
+		"description": "generate neinth module"
+	},
 	"generate neinth configs": {
 		"scope": "javascript",
 		"prefix": ">>neinth_config",

@@ -17,6 +17,9 @@ import { infos } from 'neinth';
 
 /**
  * @description
+ * - snippets:
+ * >- `>>neinth_config`;
+ * >- `>>neinth_module`;
  * ```js
  * // @ts-check
  * import { neinth } from 'neinth';

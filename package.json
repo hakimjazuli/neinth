@@ -5,7 +5,7 @@
 	"main": "index.mjs",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "bun --watch ./dev/documentation.mjs"
+		"dev": "concurrently 'bun --watch ./dev/documentation.mjs' 'bunx neinth'"
 	},
 	"bin": {
 		"neinth": "bin.mjs",

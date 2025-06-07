@@ -39,6 +39,7 @@ import { infos } from 'neinth';
  * >- `relativeToProjectAbsolute`: as it is named, and also auto process the string with `normalizePath`;
  * >- `importNeinth`: generate `Signal` of returned value of the imported neinth callback, at first the value is set to be `undefined`;
  * >- `getInfos`: generate `Signal<Set<infos>>`, at first the value is set to be `undefined`;
+ * >>- make sure to only call the `.value` getter, after checks that `infos` is `truthy`;
  * >- `onCleanUp`: add callback to `neinth` `cleanUp` event;
  * - `cleanUp` event are called during changes of `neinth` instance file, including `add`, `change` and `unlink`;
  * - `neinth` callback argument is basically an effect (vivth $), that will autosubscribe to the `SignalInstance.value` `getter` you access inside it;

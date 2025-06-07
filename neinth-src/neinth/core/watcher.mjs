@@ -18,10 +18,10 @@ export default new neinth(async ({ importNeinth, getInfos }) => {
 	 * for example purpose only, use staticly generated path when running `bunx neinth` for smoother experience
 	 */
 	const [infos, error] = trySync(() => {
-		return getInfos(config.watchPath ?? '', { file: true, dir: false }, 'utf-8').value;
+		return getInfos(config.watchPath ?? '', { file: true, dir: false }, 'utf-8');
 	});
 	if (!config || error) {
 		return;
 	}
-	return { infos };
+	return { infos: infos.value };
 });

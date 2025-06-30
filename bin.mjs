@@ -2,14 +2,14 @@
 
 // @ts-check
 
-import { runtime } from 'neinth/src/runtime.export.mjs';
+import { NeinthRuntime } from 'neinth/src/NeinthRuntime.mjs';
 import { xixth } from 'xixth';
 
 new xixth({
 	packageName: 'neinth',
 	flagCallbacks: {
-		async beforeCopy() {
-			new runtime();
+		async beforeCopy({ dev: neinthCoreDev }) {
+			new NeinthRuntime(neinthCoreDev);
 		},
 	},
 });

@@ -1,0 +1,8 @@
+// @ts-check
+/**
+ * @typedef {'neinth-src/neinth/core/awatcher.mjs'|'neinth-src/neinth/core/aaalistenToAWatcher.mjs'|'neinth-src/neinth/core/meepCLI.mjs'|'neinth-src/neinth/core/Test.mjs'|'neinth-src/neinth/core/testimport.mjs'|'neinth-src/neinth/core/testImportWorker.mjs'} NeinthList
+ */
+/**
+ * @template {NeinthList} NeinthPath
+ * @typedef {NeinthPath extends'neinth-src/neinth/core/awatcher.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/awatcher.mjs')['default']['value']:NeinthPath extends'neinth-src/neinth/core/aaalistenToAWatcher.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/aaalistenToAWatcher.mjs')['default']['value']:NeinthPath extends'neinth-src/neinth/core/meepCLI.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/meepCLI.mjs')['default']['value']:NeinthPath extends'neinth-src/neinth/core/Test.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/Test.mjs')['default']['value']:NeinthPath extends'neinth-src/neinth/core/testimport.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/testimport.mjs')['default']['value']:NeinthPath extends'neinth-src/neinth/core/testImportWorker.mjs'?import('D:/M/fdr/web/lib/neinth/neinth-src/neinth/core/testImportWorker.mjs')['default']['value']:void} GetNeinth;
+ */

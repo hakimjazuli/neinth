@@ -1,18 +1,17 @@
 // @ts-check
 
-import { runtime } from '../runtime.export.mjs';
+import { NeinthRuntime } from '../NeinthRuntime.mjs';
 import { Dirent, statSync, readFileSync, Stats } from 'fs';
 import { basename, join, relative, extname, dirname } from 'path';
 import { trySync } from 'vivth';
 
 /**
  * @description
- * - class typeHelper for file infos using `neinth` options, `getInfos`;
+ * - class typeHelper for file infos using [neinthWatcher](#neinthwatcher);
  * - containts `Dirent` and additional usefull property for the returned `file/dir`;
  */
-export class infos {
+export class Infos {
 	/**
-	 *
 	 * @param {Dirent} dirent
 	 * @param {BufferEncoding} [encoding]
 	 */
@@ -25,7 +24,7 @@ export class infos {
 		/**
 		 * @private
 		 */
-		this._relativePath = relative(runtime.projectRoot, this._fullPath);
+		this._relativePath = relative(NeinthRuntime.projectRoot, this._fullPath);
 		/**
 		 * @private
 		 */
@@ -169,9 +168,9 @@ export class infos {
 			return this._rawContent;
 		}
 		console.error({
-			error,
+			error: NeinthRuntime.parseError(error),
 			fullPath: this._fullPath,
-			message: 'failed to read fullPath',
+			message2: 'failed to read fullPath',
 		});
 		return undefined;
 	}
@@ -192,7 +191,7 @@ export class infos {
 		if (!error) {
 			return importedModule;
 		}
-		console.error({ error, timeStamp: Date.now() });
+		console.error({ error: NeinthRuntime.parseError(error), timeStamp: Date.now() });
 		return undefined;
 	}
 }

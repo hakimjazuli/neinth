@@ -4,8 +4,9 @@
 	"description": "multi file code manager and builder",
 	"main": "index.mjs",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "concurrently 'bun --watch ./dev/documentation.mjs' 'bunx neinth'"
+		"dev": "concurrently --raw 'bun --watch ./dev/documentation.mjs' 'bun --watch ./bin.mjs -dev true",
+		"start": "bun run src",
+		"src": "concurrently --raw 'bun --watch ./dev/documentation.mjs' 'bunx neinth'"
 	},
 	"bin": {
 		"neinth": "bin.mjs",
@@ -13,15 +14,16 @@
 		"neinth-package": "bin-package.mjs"
 	},
 	"dependencies": {
-		"@html_first/js_lib_template": "^2.0.16",
+		"@html_first/js_lib_template": "^2.0.17",
 		"chokidar": "^4.0.3",
-		"vivth": "^0.9.2",
+		"vivth": "^0.9.4",
 		"xixth": "^0.10.8"
 	},
 	"devDependencies": {
+		"@types/bun": "latest",
 		"concurrently": "^9.1.2",
 		"typescript": "^5.8.2",
-		"@types/bun": "latest"
+		"neinth": "link:neinth"
 	},
 	"repository": {
 		"type": "git",

@@ -33,6 +33,8 @@ import { WorkerContract } from '../worker/WorkerContract.mjs';
  * >>- `synchronizeFiles`: neinth provide no individual fileWritter as you might need to manage write and unlink upon cleanup, and it can be quickly unmanageable if the file is then be written again anyway.
  * >>- `listenToNeinth`: get `proxy` `PassiveSignal` for `NeinthComponent`;
  * >>- `listenToStdIn`: `PassiveSignal<Buffer>` listened from `StdIn`;
+ * >>- `generateWatcher`: generate `NeinthWatcher` to same dir same basename with `.watcher.mjs` `extention`;
+ * >>- `listenToGeneratedWatcher`: call `listenToNeinth` targetting `generateWatcher` generated `NeinthWatcher` of the same `NeinthComponent`;
  * >>- `indentedString`: add indentation on each line;
  * >>- `bufferToStrings`: convert `Buffer` to `Array<string>`;
  * >>- `bufferToCLIStrings`: the same as `bufferToStrings` however with `CLI` `abstraction` helpers;
@@ -42,6 +44,8 @@ import { WorkerContract } from '../worker/WorkerContract.mjs';
  * >>- `getSharedData`: `get` previous data on `shared`, usefull for handling through NeinthComponent lifecycle, or on `vivth.$`;
  * >>- `setSharedData`: `set` `shared` object, usefull for handling through NeinthComponent lifecycle, or on `vivth.$`;
  * >>- `withCleanUp`: `NeinthComponentInstance` lifecycle management, for setting up cleanup callbacks;
+ * >>- `safeUniquePing`: wrap callback in `vivth.NewPingUnique` and `vivth.tryAsync`, to safely run them and debounce it's call:
+ * >>>- don't unwrap `SignalInstance.value` inside this `callback` as it will be out of scope;
  * - further documentation on [html-first/neinth](https://html-first.bss.design/)
  */
 export class NeinthComponent extends PassiveSignal {
@@ -54,6 +58,7 @@ export class NeinthComponent extends PassiveSignal {
 	 * @typedef {import('./list/NeinthList.mjs').GetNeinth<P>} getNeinth
 	 */
 	/**
+	 * @typedef {import('../watcher/NeinthWatcher.mjs').NeinthWatcher} NeinthWatcher
 	 * @typedef {import('./list/NeinthList.mjs').NeinthList} NeinthList
 	 * @typedef {import('../worker/list/WorkersList.mjs').WorkersList} WorkersList
 	 * @typedef {'fifo'|'mostRecent'} $mode
@@ -248,27 +253,37 @@ export class NeinthComponent extends PassiveSignal {
 		super(undefined);
 		this.definition = definition;
 		return;
-		const {
-			getSharedData, // shared data for
-			setSharedData, // shared data for
-			runInstanceFallback, // fallback to be called when error occures by some implementation, like server crash or something;
-			instancePath,
-			normalizePath, // convert string '\' to '/';
-			resolveProjectPath, // relative project path to absolute;
-			newSignal, // local state management, two way communication;
-			updateValue, // notify changes to all neinthInstance subscribers, one way communication;
-			updateValue$, // Effect uses returned value to notify changes to all neinthInstance subscribers, one way communication;
-			new$, // Effect return void;
-			withCleanUp, // neinthInstance lifecycle management;
-			SetOfFiles, // Set instance generator to be used by `synchronizeFiles`;
-			synchronizeFiles, // neinth provide no individual fileWritter as you might need to manage write and unlink upon cleanup, and it can be quickly unmanageable if the file is then be written again anyway.
-			listenToNeinth, // upadated for clear intention of passively listen;
-			listenToStdIn, // return PassiveSignal<Buffer>;
-			indentedString, // clear intention, to create indented string;
-			bufferToStrings, // convert Buffer to Array<string>;
-			bufferToCLIStrings, // the same as `bufferToStrings` however with clear purpose of usability for CLI;
-			importWorker, // for non blocking process, or just any long process requiring it's own thread, implemented with typehinting, trycatched into {result, error} object for consistency and types;
-		} = this.handlers;
+		// const {
+		// 	generateWatcher,
+		// 	listenToGeneratedWatcher,
+		// 	safeUniquePing,
+		// 	getSharedData, // shared data for
+		// 	setSharedData, // shared data for
+		// 	runInstanceFallback, // fallback to be called when error occures by some implementation, like server crash or something;
+		// 	instancePath,
+		// 	normalizePath, // convert string '\' to '/';
+		// 	resolveProjectPath, // relative project path to absolute;
+		// 	newSignal, // local state management, two way communication;
+		// 	updateValue, // notify changes to all neinthInstance subscribers, one way communication;
+		// 	updateValue$, // Effect uses returned value to notify changes to all neinthInstance subscribers, one way communication;
+		// 	new$, // Effect return void;
+		// 	withCleanUp, // neinthInstance lifecycle management;
+		// 	SetOfFiles, // Set instance generator to be used by `synchronizeFiles`;
+		// 	synchronizeFiles, // neinth provide no individual fileWritter as you might need to manage write and unlink upon cleanup, and it can be quickly unmanageable if the file is then be written again anyway.
+		// 	listenToNeinth, // upadated for clear intention of passively listen;
+		// 	listenToStdIn, // return PassiveSignal<Buffer>;
+		// 	indentedString, // clear intention, to create indented string;
+		// 	bufferToStrings, // convert Buffer to Array<string>;
+		// 	bufferToCLIStrings, // the same as `bufferToStrings` however with clear purpose of usability for CLI;
+		// 	importWorker, // for non blocking process, or just any long process requiring it's own thread, implemented with typehinting, trycatched into {result, error} object for consistency and types;
+		// } = this.handlers;
+	}
+	/**
+	 * @type {NeinthList}
+	 */
+	get watcherPath() {
+		// @ts-expect-error
+		return this.instancePath.replace('.mjs', '.watcher.mjs');
 	}
 	/**
 	 * @protected
@@ -466,6 +481,46 @@ export class NeinthComponent extends PassiveSignal {
 			 */
 			listenToNeinth: (path_) => NeinthComponent.listenToNeinth(path_, this.instancePath),
 			/**
+			 * @param {Object} a0
+			 * @param {string} a0.relativePath
+			 * - relative path(from project root) to be watch;
+			 * @param {boolean} a0.addFileToSet
+			 * - add file to `Set`;
+			 * @param {boolean} a0.addDirToSet
+			 * - add dir to `Set`;
+			 * @param {BufferEncoding} [a0.encoding]
+			 * - file encoding;
+			 * - be consistent when using `neinth` `options` `synchronizeFiles` and this;
+			 * @returns {void}
+			 */
+			generateWatcher: ({ relativePath, addDirToSet, addFileToSet, encoding = 'utf-8' }) => {
+				const tempPath = this_.watcherPath;
+				this.handlers.synchronizeFiles({
+					id: `watcher:${relativePath}`,
+					SetOfFilesInstance: new SetOfFiles({
+						relativePathFromProjectRoot: tempPath,
+						template: {
+							string: `// @ts-check
+
+import { NeinthWatcher } from 'neinth';
+
+export default new NeinthWatcher({
+  relativePath: '${relativePath}',
+  addDirToSet: ${addDirToSet},
+  addFileToSet: ${addFileToSet},
+  encoding: '${encoding}',
+});
+`,
+						},
+						encoding: 'utf-8',
+					}),
+				});
+			},
+			/**
+			 * @returns {PassiveSignal<NeinthWatcher["value"]>}
+			 */
+			listenToGeneratedWatcher: () => this_.handlers.listenToNeinth(this.watcherPath),
+			/**
 			 * - usefull for creating functional scope for long running process that might need to be cleaned up when file changes and saved in the developement;
 			 * @template {returnedValue} returnedValue
 			 * @param {()=>Promise<{value?:returnedValue, onCleanUp?:(()=>Promise<void>), onUnlink?:(()=>Promise<void>)}>} callback
@@ -483,9 +538,9 @@ export class NeinthComponent extends PassiveSignal {
 			 * - create a local `Signal`;
 			 * >- two way communication with `.value` `setter` and `getter`;
 			 * - can be `autoSubscribed` when `SignalInstance.value` `getter` is unwrapped inside an `Effect` callback;
-			 * @template {returnedValue} returnedValue
-			 * @param {returnedValue} value
-			 * @returns {Signal<returnedValue>}
+			 * @template V
+			 * @param {V} value
+			 * @returns {Signal<V>}
 			 */
 			newSignal: (value) => {
 				const signal = new Signal(value);
@@ -596,7 +651,7 @@ export class NeinthComponent extends PassiveSignal {
 			 * - dynamically `synchronize`(`generate` and `unlink`) `files`;
 			 * -neinth provide no individual fileWritter as you might need to manage write and unlink upon cleanup, and it can be quickly unmanageable if the file is then be written again anyway;
 			 * @param {Object} arg0
-			 * @param {number} arg0.id
+			 * @param {string} arg0.id
 			 * - should be hard coded and static to be correctly managed.
 			 * - must be unique inside the `neinth.asyncHandler`;
 			 * @param {SetOfFiles} arg0.SetOfFilesInstance
@@ -610,6 +665,27 @@ export class NeinthComponent extends PassiveSignal {
 			 * - listen to `StdIn`;
 			 */
 			listenToStdIn: () => StdInHandler.listenToStdIn(),
+			/**
+			 * - run `vivth` queue using `NewUniquePing`, `errors` on `callback` will be safely escaped;
+			 * @param {string} id
+			 * - id are global, if you want to scope it inside this `NeinthComponent`, you can prefix it by using `this.instancePath`;
+			 * @param {()=>Promise<void>} callback
+			 * - don't unwrapp `SignalInstance.value` inside this `callback`, as it will be out of scope;
+			 * @param {number} [debounceMS]
+			 */
+			safeUniquePing: (id, callback, debounceMS = 0) => {
+				NewPingUnique(
+					id,
+					async () => {
+						const [_, error] = await tryAsync(callback);
+						if (!error) {
+							return;
+						}
+						console.error({ ...NeinthRuntime.parseError(error) });
+					},
+					debounceMS
+				);
+			},
 			/**
 			 * - convert `Buffer` to `Array<string>`
 			 */

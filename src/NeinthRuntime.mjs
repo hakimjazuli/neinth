@@ -9,7 +9,7 @@ import {
 	statSync,
 	writeFileSync,
 } from 'fs';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname, join, basename } from 'path';
 
 import chokidar from 'chokidar';
@@ -214,7 +214,7 @@ export class NeinthRuntime {
 		});
 		if (error) {
 			console.error({
-				error: NeinthRuntime.parseError(error),
+				error,
 				filePath,
 				failed: 'write file to `filePath`',
 				timeStamp: Date.now(),

@@ -6,10 +6,11 @@
  * build and distributed under MIT licencse
  * @description
  * ## neinth code manager
- * - is a simple code management library;
- * - it helps you generates code programatically;
- * - progressively update `neinthScritps` as you write and saves:
- * >- making it technically more efficient then using build in js `runtime` `--watch`, since `neinth` doesn't need to be interpreted again by `js` `runtime` when changes happens;
+ * - is a code management library:
+ * >- to act as intermediary translation layer for your own runtime framework/language;
+ * - is a `devTool` that optimize your dev time `JS` `runtime` execution:
+ * >- during your developement time using `neinth`, the `NeintRuntimeInstance` dynamically and renew imports `neinthScritps` as you write and saves;
+ * >- making it technically more efficient then using build in js `runtime` `--watch`, since with `neinth`, your `JS` `runtime`  doesn't need to run full code again when changes happens;
  * 
  * ## installing starter project
  * > you might need to stick to single package manager to run the binary, (such as `bun`/`bunx` or others):
@@ -56,7 +57,7 @@
  * > `package root`
  * >- `neinth-src`
  * >>- `your-package-name`: must refer to valid distributed `package.json.name`, whether `symlinked` or through `npm`;
- * >>>- `core`: this path are not to be edited by user and are used for when updating distributed packages;
+ * >>>- `core`: this path are not to be edited by user and are used by dev for when updating distributed packages;
  * >>>- other then `core`: these dirs are to be able to be safely edited, and must not be needed to be auto overwrited when updating, any update that requires modification in any of these dirs must be documented for manual update;
  * 
  * ## further documentation and example
@@ -90,7 +91,7 @@
  * >- class renames;
  * >- `Effects` are now callables via `this.new$` or `this.updateValue$`, for more granularity on `autoSubscribed` `Signals`;
  * >- this version is likely to be used as standards for future releases;
- * ## main class for instantition:
+ * ## main classes for instantition:
  * - [NeinthComponent](#neinthcomponent): as main logic;
  * - [NeinthWatcher](#neinthwatcher): as helper for watcher;
  * - [NeinthWorker](#neinthworker): as `workerThread` wrapper;

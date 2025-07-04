@@ -23,7 +23,7 @@ export class SetOfFiles extends Set {
 	 */
 	/**
 	 * @typedef {import('./list/NeinthList.mjs').NeinthList} NeinthList
-	 * @typedef {`${NeinthList}:${number}`} idType
+	 * @typedef {`${NeinthList}:${string}`} idType
 	 */
 	/**
 	 * @param {...writeFileType} [setOfWriteFileType]
@@ -82,7 +82,7 @@ export class SetOfFiles extends Set {
 	 * -neinth provide no individual fileWritter as you might need to manage write and unlink upon cleanup, and it can be quickly unmanageable if the file is then be written again anyway;
 	 * @param {NeinthComponent["instancePath"]} neinthInstancePath
 	 * @param {NeinthComponent["withCleanUp"]} withCleanUp
-	 * @param {number} id
+	 * @param {string} id
 	 * - should be hard coded and static to be correctly managed.
 	 * - must be unique inside the `neinth.asyncHandler`;
 	 * @param {SetOfFiles} SetOfFilesInstance
@@ -120,7 +120,7 @@ export class SetOfFiles extends Set {
 	/**
 	 *
 	 * @param {NeinthList} path_
-	 * @param {number} id
+	 * @param {string} id
 	 * @param  {SetOfFiles} writeFileInstance
 	 */
 	static write = (path_, id, writeFileInstance) => {

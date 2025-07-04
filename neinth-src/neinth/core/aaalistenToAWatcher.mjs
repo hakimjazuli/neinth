@@ -3,13 +3,15 @@
 import { NeinthComponent } from 'neinth';
 
 export default new NeinthComponent(async function () {
-	const infos = this.listenToNeinth('neinth-src/neinth/core/awatcher.mjs');
+	const watcher_ = this.listenToNeinth('neinth-src/neinth/core/awatcher.mjs');
 	this.new$(async () => {
-		const filesSet = new this.SetOfFiles();
-		if (!infos) {
+		const info = watcher_.value;
+		if (!info) {
 			return;
 		}
-		infos.value.forEach((info) => {
+		const filesSet = new this.SetOfFiles();
+		const { infos } = info;
+		infos.forEach((info) => {
 			filesSet.add({
 				relativePathFromProjectRoot: info.path.relative.replace('neinth-watch', 'neinth-test'),
 				template: {
@@ -18,6 +20,6 @@ export default new NeinthComponent(async function () {
 				encoding: 'utf-8',
 			});
 		});
-		this.synchronizeFiles({ id: 1, SetOfFilesInstance: filesSet });
+		this.synchronizeFiles({ id: 'writeFile', SetOfFilesInstance: filesSet });
 	});
 });

@@ -10,7 +10,14 @@ import { Infos } from '../helpers/Infos.mjs';
  * @description
  * ```js
  * /**
- *  * @extends NeinthComponent<Set<Infos>>
+ *  * @typedef {Object} NeinthWatcherOptions
+ *  * @property {string} relativePath
+ *  * @property {boolean} addFileToSet
+ *  * @property {boolean} addDirToSet
+ *  * @property {BufferEncoding} [encoding]
+ *  *[blank]/
+ * /**
+ *  * @extends NeinthComponent<{watcherOptions:NeinthWatcherOptions, infos:Set<Infos>}>
  *  *[blank]/
  * ```
  * - export `NeinthWatcherInstance` as default on `neitnh-src/**[blank]/*` to be used as `directory/file` watcher;
@@ -35,18 +42,16 @@ export class NeinthWatcher extends NeinthComponent {
 			const truePath = this.resolveProjectPath(relativePath);
 			const listener = async () =>
 				NewPingUnique(`neinthWatcher.constructor const listener:"${truePath}"`, async () => {
-					const value = NeinthRuntime.getInfos(
-						truePath,
-						{ file: addFileToSet, dir: addDirToSet },
-						encoding
-					);
-
-					this.updateValue({
-						value,
-						mode: 'mostRecent',
-						// @ts-expect-error
-						neinthInstance: this.instancePath,
-					});
+					const value = {
+						watcherOptions: { relativePath, addDirToSet, addFileToSet, encoding },
+						infos: NeinthRuntime.getInfos(
+							truePath,
+							{ file: addFileToSet, dir: addDirToSet },
+							encoding
+						),
+					};
+					// @ts-expect-error
+					this.updateValue({ value, mode: 'mostRecent' });
 				});
 			this.withCleanUp(async () => {
 				const watcher = chokidar.watch(truePath).on('all', listener);
@@ -58,9 +63,12 @@ export class NeinthWatcher extends NeinthComponent {
 				};
 			});
 			/**
-			 * @type {Set<Infos>}
+			 * @type {{watcherOptions:NeinthWatcherOptions, infos:Set<Infos>}}
 			 */
-			const returnValue = new Set();
+			const returnValue = {
+				watcherOptions: { relativePath, addDirToSet, addFileToSet, encoding },
+				infos: new Set(),
+			};
 			return returnValue;
 		});
 	}

@@ -71,14 +71,14 @@ export class WorkerContract {
 					workerInstance,
 					/**
 					 * @template {WorkerList} WorkerList
-					 * @type {import('./list/WorkersListGet.type.mjs').GetWorker<WorkerList>["default"]["mainAssignJob"]}
+					 * @type {import('neinth').GetWorker<WorkerList>["default"]["mainAssignJob"]}
 					 */
 					assignJob: (message) => {
 						workerInstance.postMessage(message);
 					},
 					/**
 					 * @template {WorkerList} WorkerList
-					 * @type {import('./list/WorkersListGet.type.mjs').GetWorker<WorkerList>["default"]["mainOnFinishedJob"]}
+					 * @type {import('neinth').GetWorker<WorkerList>["default"]["mainOnFinishedJob"]}
 					 */
 					onFinishedJob: (asyncCallback) => {
 						workerInstance.on('message', asyncCallback);

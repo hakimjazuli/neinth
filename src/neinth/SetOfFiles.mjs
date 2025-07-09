@@ -5,7 +5,7 @@ import { trySync } from 'vivth';
 import { unlinkSync } from 'fs';
 
 /**
- * @typedef {import('./writeFileType.type.mjs').writeFileType} writeFileType
+ * @typedef {import('neinth').writeFileType} writeFileType
  * @typedef {import('./NeinthComponent.mjs').NeinthComponent} NeinthComponent
  */
 

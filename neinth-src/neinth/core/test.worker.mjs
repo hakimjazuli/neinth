@@ -8,6 +8,6 @@ import { NeinthWorker } from 'neinth';
  * string
  * >}
  */
-new NeinthWorker(async (message) => {
+export default new NeinthWorker(async (message) => {
 	return message.toUpperCase();
 });

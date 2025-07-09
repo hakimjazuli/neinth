@@ -9,7 +9,7 @@ import {
 	statSync,
 	writeFileSync,
 } from 'fs';
-import { fileURLToPath, pathToFileURL } from 'url';
+import { fileURLToPath } from 'url';
 import { dirname, join, basename } from 'path';
 
 import chokidar from 'chokidar';
@@ -248,6 +248,17 @@ export class NeinthRuntime {
 	 */
 	static getInfos = (currentPath, { file, dir }, encoding = 'utf8', result = new Set()) => {
 		const [_, error] = trySync(() => {
+			if (statSync(currentPath).isFile()) {
+				const entries = readdirSync(dirname(currentPath), { withFileTypes: true });
+				const fileName = basename(currentPath);
+				for (const entry of entries) {
+					if (entry.name !== fileName) {
+						continue;
+					}
+					result.add(new Infos(entry, encoding));
+					return;
+				}
+			}
 			const entries = readdirSync(currentPath, { withFileTypes: true });
 			for (const entry of entries) {
 				const entryPath = join(currentPath, entry.name);

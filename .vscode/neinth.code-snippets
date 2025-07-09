@@ -12,7 +12,7 @@
 		"body": [
 			"// @ts-check",
 			"",
-			"import { NeinthComponent } from 'Neinth';",
+			"import { NeinthComponent } from 'neinth';",
 			"",
 			"/**",
 			" * @description",
@@ -38,7 +38,7 @@
 		"body": [
 			"// @ts-check",
 			"",
-			"import { NeinthComponent } from 'Neinth';",
+			"import { NeinthComponent } from 'neinth';",
 			"",
 			"/**",
 			" * @type {NeinthComponent<",

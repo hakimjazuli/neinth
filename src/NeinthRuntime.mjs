@@ -33,25 +33,6 @@ export class NeinthRuntime {
 	 */
 	static debounceMSForUpdateList = undefined;
 	/**
-	 * @template S
-	 * @param {Set<S>} set
-	 * @param {(setMember:S)=>Promise<any>} callback
-	 * @param {(error:Error)=>void} [logErrorCallback]
-	 * @returns {Promise<void>}
-	 */
-	static forLoopSet = async (set, callback, logErrorCallback = undefined) => {
-		for (const member of set) {
-			try {
-				await callback(member);
-			} catch (error) {
-				if (!logErrorCallback) {
-					return;
-				}
-				logErrorCallback(error);
-			}
-		}
-	};
-	/**
 	 * @typedef {import('neinth').NeinthList} NeinthList
 	 */
 	/**
@@ -96,11 +77,84 @@ export class NeinthRuntime {
 	 * @type {string}
 	 */
 	static corePath;
+	/**
+	 * @template S
+	 * @param {Set<S>} set
+	 * @param {(setMember:S)=>Promise<any>} callback
+	 * @param {(error:Error)=>void} [logErrorCallback]
+	 * @returns {Promise<void>}
+	 */
+	static forLoopSet = async (set, callback, logErrorCallback = undefined) => {
+		for (const member of set) {
+			try {
+				await callback(member);
+			} catch (error) {
+				if (!logErrorCallback) {
+					return;
+				}
+				logErrorCallback(error);
+			}
+		}
+	};
+	/**
+	 * @type {Set<()=>void>}
+	 */
+	static #fallbackCallbacks = new Set();
+	/**
+	 * @param {()=>void} callback
+	 * @returns {void}
+	 */
+	static onProcessFallbacks = (callback) => {
+		NeinthRuntime.#fallbackCallbacks.add(async () => {
+			await callback();
+			NeinthRuntime.unRegisterProcessFallback(callback);
+		});
+	};
+	/**
+	 * @param {()=>void} callback
+	 * @returns {void}
+	 */
+	static unRegisterProcessFallback = (callback) => {
+		NeinthRuntime.#fallbackCallbacks.delete(callback);
+	};
+
+	static #hasProcessExited = false;
+	static processFallback = async () => {
+		if (NeinthRuntime.#hasProcessExited) {
+			return;
+		}
+		NeinthRuntime.#hasProcessExited = true;
+		await NeinthRuntime.forLoopSet(NeinthRuntime.#fallbackCallbacks, async (callback) => {
+			await tryAsync(async () => {
+				await callback();
+			});
+		});
+		process.exit();
+	};
+	static #exitEvents = [
+		'exit',
+		'uncaughtException',
+		'unhandledRejection',
+		'beforeExit',
+		'SIGHUP',
+		'SIGQUIT',
+	];
+	/**
+	 * @returns {void}
+	 */
+	static #registerExitEvents = () => {
+		const exitEvents = NeinthRuntime.#exitEvents;
+		const exitCallback = NeinthRuntime.processFallback;
+		for (let i = 0; i < exitEvents.length; i++) {
+			process.on(exitEvents[i], exitCallback);
+		}
+	};
 	static {
 		NeinthRuntime.projectRoot = NeinthRuntime.normalizePath(
 			join(process.env.INIT_CWD || process.cwd())
 		);
 		NeinthRuntime.corePath = realpathSync(fileURLToPath(new URL('./', import.meta.url)));
+		NeinthRuntime.#registerExitEvents();
 	}
 	/**
 	 * @param {Object} arg0

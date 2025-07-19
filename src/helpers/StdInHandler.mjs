@@ -1,6 +1,7 @@
 // @ts-check
 
 import { PassiveSignal } from '../neinth/PassiveSignal.mjs';
+import { NeinthRuntime } from '../NeinthRuntime.mjs';
 
 /**
  * @description
@@ -62,7 +63,6 @@ export class StdInHandler {
 		}
 		StdInHandler.isLitening = true;
 		const signal = StdInHandler.signal;
-		let exited = false;
 		/**
 		 * @param {Buffer} chunk
 		 * @returns {void}
@@ -76,22 +76,10 @@ export class StdInHandler {
 		};
 		process.stdin.resume();
 		process.stdin.on('data', onData);
-		const processExits = () => {
-			if (exited) {
-				return;
-			}
-			exited = true;
+		NeinthRuntime.onProcessFallbacks(async () => {
+			console.info('exiting StdInHandler');
 			process.stdin.removeListener('data', onData);
 			process.stdin.pause();
-			process.exit();
-		};
-		process.on('SIGINT', () => {
-			console.log('Received SIGINT (e.g., Ctrl+C)');
-			processExits();
-		});
-		process.on('SIGTERM', () => {
-			console.log('Received SIGTERM');
-			processExits();
 		});
 	};
 	/**

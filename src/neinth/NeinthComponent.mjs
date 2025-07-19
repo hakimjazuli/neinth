@@ -337,10 +337,13 @@ export class NeinthComponent extends PassiveSignal {
 	/**
 	 * @private
 	 * add cleanUp callback to be called onCleanUp event
-	 * @param {(()=>Promise<void>)[]} callback
+	 * @param {(()=>Promise<void>)[]} callbacks
 	 */
-	onUnLink = (...callback) => {
-		this.unLinks = this.unLinks.union(new Set(callback));
+	onUnLink = (...callbacks) => {
+		this.unLinks = this.unLinks.union(new Set(callbacks));
+		for (let i = 0; i < callbacks.length; i++) {
+			NeinthRuntime.onProcessFallbacks(callbacks[i]);
+		}
 	};
 	/**
 	 * @private
@@ -350,6 +353,7 @@ export class NeinthComponent extends PassiveSignal {
 		NewPingUnique(`neinth.unLink:"${this.instancePath}"`, async () => {
 			await NeinthRuntime.forLoopSet(this.unLinks, async (callback) => {
 				await callback();
+				NeinthRuntime.unRegisterProcessFallback(callback);
 			});
 		});
 
@@ -361,10 +365,13 @@ export class NeinthComponent extends PassiveSignal {
 	/**
 	 * @private
 	 * add cleanUp callback to be called onCleanUp event
-	 * @param {(()=>Promise<void>)[]} callback
+	 * @param {(()=>Promise<void>)[]} callbacks
 	 */
-	onCleanUp = (...callback) => {
-		this.cleanUps = this.cleanUps.union(new Set(callback));
+	onCleanUp = (...callbacks) => {
+		this.cleanUps = this.cleanUps.union(new Set(callbacks));
+		for (let i = 0; i < callbacks.length; i++) {
+			NeinthRuntime.onProcessFallbacks(callbacks[i]);
+		}
 	};
 	/**
 	 * @private
@@ -375,8 +382,10 @@ export class NeinthComponent extends PassiveSignal {
 		NewPingUnique(`neinth.cleanUp:"${this.instancePath}"`, async () => {
 			await NeinthRuntime.forLoopSet(this.cleanUps, async (callback) => {
 				await callback();
+				NeinthRuntime.unRegisterProcessFallback(callback);
 			});
 		});
+
 	/**
 	 * @private
 	 * @template {returnedValue} returnedValue

@@ -28,6 +28,10 @@ export class WorkerContract {
 	 */
 	constructor(workerPath) {
 		this.WorkerPath = workerPath;
+		if (WorkerContract.#isInitialized) {
+			return;
+		}
+		WorkerContract.#registerFallback();
 	}
 	/**
 	 * @type {WorkerPath}
@@ -91,15 +95,15 @@ export class WorkerContract {
 				},
 			};
 		});
-	static {
-		process.on('SIGINT', async () => {
+
+	static #isInitialized = false;
+	static #registerFallback = () =>
+		NeinthRuntime.onProcessFallbacks(async () => {
 			if (WorkerContract.workerSet.size) {
 				await NeinthRuntime.forLoopSet(WorkerContract.workerSet, async (worker) => {
 					worker.unref();
 					await worker.terminate();
 				});
 			}
-			process.exit();
 		});
-	}
 }

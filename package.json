@@ -1,6 +1,6 @@
 {
 	"name": "neinth",
-	"version": "0.11.3",
+	"version": "0.11.4",
 	"description": "multi file code manager and builder",
 	"main": "index.mjs",
 	"scripts": {

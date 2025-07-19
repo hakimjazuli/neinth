@@ -28,7 +28,7 @@ export class WorkerContract {
 	 */
 	constructor(workerPath) {
 		this.WorkerPath = workerPath;
-		if (WorkerContract.#isInitialized) {
+		if (WorkerContract.#fallbackIsRegistered) {
 			return;
 		}
 		WorkerContract.#registerFallback();
@@ -96,8 +96,9 @@ export class WorkerContract {
 			};
 		});
 
-	static #isInitialized = false;
-	static #registerFallback = () =>
+	static #fallbackIsRegistered = false;
+	static #registerFallback = () => {
+		WorkerContract.#fallbackIsRegistered = true;
 		NeinthRuntime.onProcessFallbacks(async () => {
 			if (WorkerContract.workerSet.size) {
 				await NeinthRuntime.forLoopSet(WorkerContract.workerSet, async (worker) => {
@@ -106,4 +107,5 @@ export class WorkerContract {
 				});
 			}
 		});
+	};
 }

@@ -2,7 +2,7 @@
 // @ts-check
 
 import { xixth } from 'xixth';
-import { trySync } from 'vivth';
+import { TrySync } from 'vivth';
 import { writeFileSync, readFileSync } from 'fs';
 
 let autoDocSucced = false;
@@ -67,7 +67,7 @@ const install = (packagePath, packageName) => {
 		flagCallbacks: {
 			async afterCopy() {
 				if (autoDocSucced) {
-					const [, error] = trySync(() => {
+					const [, error] = TrySync(() => {
 						const packageJsonPath = this.generateProjectAbsolutePath('package.json');
 						const packageJsonString = readFileSync(packageJsonPath).toString();
 						const packageJsonObj = JSON.parse(packageJsonString);

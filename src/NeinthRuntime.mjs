@@ -13,7 +13,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join, basename } from 'path';
 
 import chokidar from 'chokidar';
-import { NewPingFIFO, tryAsync, trySync } from 'vivth';
+import { PingFIFO, TryAsync, TrySync } from 'vivth';
 
 import { DataWorkers } from './worker/DataWorkers.mjs';
 import { Infos } from './helpers/Infos.mjs';
@@ -48,7 +48,7 @@ export class NeinthRuntime {
 	 */
 	static throwIfPathIsNotExist = (relativePath, sourcePath) => {
 		const absolutePath = NeinthRuntime.resolveProjectPath(relativePath);
-		const [result, error] = trySync(() => statSync(absolutePath).isFile());
+		const [result, error] = TrySync(() => statSync(absolutePath).isFile());
 		if (result === true) {
 			return;
 		}
@@ -125,7 +125,7 @@ export class NeinthRuntime {
 		}
 		NeinthRuntime.#hasProcessExited = true;
 		await NeinthRuntime.forLoopSet(NeinthRuntime.#fallbackCallbacks, async (callback) => {
-			await tryAsync(async () => {
+			await TryAsync(async () => {
 				await callback();
 			});
 		});
@@ -190,13 +190,13 @@ export class NeinthRuntime {
 			return undefined;
 		}
 		const dynamicPath = `${importPath}?${Date.now()}`;
-		let [importedModule, error] = await tryAsync(async () => {
+		let [importedModule, error] = await TryAsync(async () => {
 			return (await import(`file://${dynamicPath}`)).default;
 		});
 		if (!error) {
 			return importedModule;
 		}
-		[importedModule, error] = await tryAsync(async () => {
+		[importedModule, error] = await TryAsync(async () => {
 			return (await import(dynamicPath)).default;
 		});
 		if (!error) {
@@ -241,7 +241,7 @@ export class NeinthRuntime {
 	 * @returns {void}
 	 */
 	static writeFileSafe = (filePath, content, encoding = 'utf8') => {
-		let [_, error] = trySync(() => {
+		let [_, error] = TrySync(() => {
 			const dir = dirname(filePath);
 			if (!existsSync(dir)) {
 				mkdirSync(dir, { recursive: true });
@@ -301,7 +301,7 @@ export class NeinthRuntime {
 	 * @returns {Set<Infos>}
 	 */
 	static getInfos = (currentPath, { file, dir }, encoding = 'utf8', result = new Set()) => {
-		const [_, error] = trySync(() => {
+		const [_, error] = TrySync(() => {
 			if (statSync(currentPath).isFile()) {
 				const entries = readdirSync(dirname(currentPath), { withFileTypes: true });
 				const fileName = basename(currentPath);
@@ -346,7 +346,7 @@ export class NeinthRuntime {
 	 */
 	static run = async () => {
 		let watchPath;
-		let [_, error] = await tryAsync(async () => {
+		let [_, error] = await TryAsync(async () => {
 			watchPath = join(NeinthRuntime.projectRoot, NeinthRuntime.folderPath);
 			chokidar
 				.watch(NeinthRuntime.folderPath)
@@ -373,8 +373,8 @@ export class NeinthRuntime {
 	 * @param {import('fs').Stats} [_]
 	 * @returns {void}
 	 */
-	static onUnlink = (path_, _) =>
-		NewPingFIFO(async () => {
+	static onUnlink = (path_, _) => {
+		new PingFIFO(async () => {
 			// @ts-expect-error
 			path_ = NeinthRuntime.normalizePath(path_);
 			// @ts-expect-error
@@ -386,14 +386,15 @@ export class NeinthRuntime {
 			// @ts-expect-error
 			NeinthComponent.unlinkProxySignal(path_);
 		});
+	};
 
 	/**
 	 * @param {PathLike|NeinthList} path_
 	 * @param {import('fs').Stats} [_]
 	 * @returns {void}
 	 */
-	static onAddOrChange = (path_, _) =>
-		NewPingFIFO(async () => {
+	static onAddOrChange = (path_, _) => {
+		new PingFIFO(async () => {
 			// @ts-expect-error
 			path_ = NeinthRuntime.normalizePath(path_);
 			// @ts-expect-error
@@ -411,4 +412,5 @@ export class NeinthRuntime {
 			// @ts-expect-error
 			NeinthComponent.unlinkProxySignal(path_);
 		});
+	};
 }

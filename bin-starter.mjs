@@ -3,7 +3,7 @@
 
 import { xixth } from 'xixth';
 import { renameSync, readFileSync, writeFileSync } from 'fs';
-import { trySync } from 'vivth';
+import { TrySync } from 'vivth';
 
 const packageName = 'neinth';
 let goToRename = true;
@@ -51,7 +51,7 @@ new xixth({
 				return;
 			}
 			if (autoDocSucced) {
-				const [, error] = trySync(() => {
+				const [, error] = TrySync(() => {
 					const packageJsonPath = this.generatePackageAbsolutePath('package.json');
 					const packageJsonString = readFileSync(packageJsonPath).toString();
 					const packageJsonObj = JSON.parse(packageJsonString);
@@ -73,7 +73,7 @@ new xixth({
 			}
 			const packageName_ = `neinth-src/${packageName}`;
 			const realPackageName = `neinth-src/${p}`;
-			const [, error] = trySync(() => {
+			const [, error] = TrySync(() => {
 				renameSync(
 					this.generateProjectAbsolutePath(packageName_),
 					this.generateProjectAbsolutePath(realPackageName)

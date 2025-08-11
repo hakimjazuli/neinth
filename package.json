@@ -18,7 +18,7 @@
 		"@html_first/js_lib_template": "^2.0.17",
 		"@types/node": "^24.0.7",
 		"chokidar": "^4.0.3",
-		"vivth": "^0.10.0",
+		"vivth": "latest",
 		"xixth": "^0.10.8"
 	},
 	"devDependencies": {

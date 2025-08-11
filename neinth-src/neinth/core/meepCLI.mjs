@@ -1,6 +1,6 @@
 // @ts-check
 
-import { trySync } from 'vivth';
+import { TrySync } from 'vivth';
 import { NeinthComponent } from 'neinth';
 
 export default new NeinthComponent(async function () {
@@ -37,7 +37,7 @@ export default new NeinthComponent(async function () {
 			if (!listC) {
 				return undefined;
 			}
-			const [_, error] = trySync(() => {
+			const [_, error] = TrySync(() => {
 				const command = listC[0];
 				listC.shift();
 				return meepCLi[command](...listC);

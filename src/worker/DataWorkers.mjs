@@ -3,7 +3,7 @@
 import { join } from 'path';
 import { readFileSync, writeFileSync } from 'fs';
 
-import { NewPingUnique, trySync } from 'vivth';
+import { PingUnique, TrySync } from 'vivth';
 import { NeinthRuntime } from '../NeinthRuntime.mjs';
 import { PassiveSignal } from '../neinth/PassiveSignal.mjs';
 import { WorkerContract } from './WorkerContract.mjs';
@@ -66,13 +66,13 @@ export class DataWorkers {
 	/**
 	 * @returns {void}
 	 */
-	static updateList = () =>
-		NewPingUnique(
+	static updateList = () => {
+		new PingUnique(
 			`dataWorkers.updateList`,
 			async () => {
 				const { corePath, normalizePath, resolveProjectPath } = NeinthRuntime;
 				const listPath = join(corePath, 'worker', 'list', 'WorkersList.mjs');
-				let [_, error] = trySync(async () => {
+				let [_, error] = TrySync(async () => {
 					const workersNames_ = [];
 					const types_ = [];
 					const setOfPath = DataWorkers.mapped;
@@ -126,4 +126,5 @@ export class DataWorkers {
 			},
 			NeinthRuntime.debounceMSForUpdateList
 		);
+	};
 }

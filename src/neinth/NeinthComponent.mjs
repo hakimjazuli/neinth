@@ -2,7 +2,7 @@
 
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { $, NewPingFIFO, NewPingUnique, Signal, tryAsync, trySync } from 'vivth';
+import { $, PingFIFO, PingUnique, Signal, TryAsync, TrySync } from 'vivth';
 import { NeinthRuntime } from '../NeinthRuntime.mjs';
 import { StdInHandler } from '../helpers/StdInHandler.mjs';
 import { PassiveSignal } from './PassiveSignal.mjs';
@@ -44,7 +44,7 @@ import { WorkerContract } from '../worker/WorkerContract.mjs';
  * >>- `getSharedData`: `get` previous data on `shared`, usefull for handling through NeinthComponent lifecycle, or on `vivth.$`;
  * >>- `setSharedData`: `set` `shared` object, usefull for handling through NeinthComponent lifecycle, or on `vivth.$`;
  * >>- `withCleanUp`: `NeinthComponentInstance` lifecycle management, for setting up cleanup callbacks;
- * >>- `safeUniquePing`: wrap callback in `vivth.NewPingUnique` and `vivth.tryAsync`, to safely run them and debounce it's call:
+ * >>- `safeUniquePing`: wrap callback in `vivth.PingUnique` and `vivth.TryAsync`, to safely run them and debounce it's call:
  * >>>- don't unwrap `SignalInstance.value` inside this `callback` as it will be out of scope;
  * - further documentation on [html-first/neinth](https://html-first.bss.design/)
  */
@@ -182,12 +182,12 @@ export class NeinthComponent extends PassiveSignal {
 			}, 1000);
 			return;
 		}
-		NewPingUnique(
+		new PingUnique(
 			'neinth.updateNeinth',
 			async () => {
 				const { corePath, normalizePath, resolveProjectPath } = NeinthRuntime;
 				const listPath = join(corePath, 'neinth', 'list', 'NeinthList.mjs');
-				let [_, error] = trySync(async () => {
+				let [_, error] = TrySync(async () => {
 					const neinthNames_ = [];
 					const types_ = [];
 					const mappedNeinth = NeinthComponent.mappedSignal;
@@ -349,13 +349,14 @@ export class NeinthComponent extends PassiveSignal {
 	 * @private
 	 * @returns {void}
 	 */
-	unLink = () =>
-		NewPingUnique(`neinth.unLink:"${this.instancePath}"`, async () => {
+	unLink = () => {
+		new PingUnique(`neinth.unLink:"${this.instancePath}"`, async () => {
 			await NeinthRuntime.forLoopSet(this.unLinks, async (callback) => {
 				await callback();
 				NeinthRuntime.unRegisterProcessFallback(callback);
 			});
 		});
+	};
 
 	/**
 	 * @private
@@ -378,14 +379,14 @@ export class NeinthComponent extends PassiveSignal {
 	 * trigger cleanUp event
 	 * @returns {void}
 	 */
-	cleanUp = () =>
-		NewPingUnique(`neinth.cleanUp:"${this.instancePath}"`, async () => {
+	cleanUp = () => {
+		new PingUnique(`neinth.cleanUp:"${this.instancePath}"`, async () => {
 			await NeinthRuntime.forLoopSet(this.cleanUps, async (callback) => {
 				await callback();
 				NeinthRuntime.unRegisterProcessFallback(callback);
 			});
 		});
-
+	};
 	/**
 	 * @private
 	 * @template {returnedValue} returnedValue
@@ -393,7 +394,7 @@ export class NeinthComponent extends PassiveSignal {
 	 * @returns {Promise<returnedValue>}
 	 */
 	withCleanUp = async (callback) => {
-		const [result = {}, error] = await tryAsync(async () => {
+		const [result = {}, error] = await TryAsync(async () => {
 			return await callback();
 		});
 		if (error) {
@@ -403,7 +404,7 @@ export class NeinthComponent extends PassiveSignal {
 		const { value = undefined, onCleanUp = undefined, onUnlink = undefined } = result;
 		if (onCleanUp) {
 			this.onCleanUp(async () => {
-				const [_, error] = await tryAsync(onCleanUp);
+				const [_, error] = await TryAsync(onCleanUp);
 				if (!error) {
 					return;
 				}
@@ -412,7 +413,7 @@ export class NeinthComponent extends PassiveSignal {
 		}
 		if (onUnlink) {
 			this.onUnLink(async () => {
-				const [_, error] = await tryAsync(onUnlink);
+				const [_, error] = await TryAsync(onUnlink);
 				if (!error) {
 					return;
 				}
@@ -644,11 +645,11 @@ export default new NeinthWatcher({
 				};
 				switch (mode) {
 					case 'fifo':
-						NewPingFIFO(handler);
+						new PingFIFO(handler);
 						break;
 					case 'mostRecent':
 					default:
-						NewPingUnique(`neinth.updateValue:"${this_.instancePath}"`, handler);
+						new PingUnique(`neinth.updateValue:"${this_.instancePath}"`, handler);
 						break;
 				}
 			},
@@ -683,10 +684,10 @@ export default new NeinthWatcher({
 			 * @param {number} [debounceMS]
 			 */
 			safeUniquePing: (id, callback, debounceMS = 0) => {
-				NewPingUnique(
+				new PingUnique(
 					id,
 					async () => {
-						const [_, error] = await tryAsync(callback);
+						const [_, error] = await TryAsync(callback);
 						if (!error) {
 							return;
 						}

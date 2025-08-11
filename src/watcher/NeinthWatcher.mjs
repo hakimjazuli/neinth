@@ -3,7 +3,7 @@
 import chokidar from 'chokidar';
 import { NeinthComponent } from '../neinth/NeinthComponent.mjs';
 import { NeinthRuntime } from '../NeinthRuntime.mjs';
-import { NewPingUnique } from 'vivth';
+import { PingUnique } from 'vivth';
 import { Infos } from '../helpers/Infos.mjs';
 
 /**
@@ -40,8 +40,8 @@ export class NeinthWatcher extends NeinthComponent {
 	constructor({ relativePath, addDirToSet, addFileToSet, encoding = 'utf-8' }) {
 		super(async function () {
 			const truePath = this.resolveProjectPath(relativePath);
-			const listener = async () =>
-				NewPingUnique(`neinthWatcher.constructor const listener:"${truePath}"`, async () => {
+			const listener = async () => {
+				new PingUnique(`neinthWatcher.constructor const listener:"${truePath}"`, async () => {
 					const value = {
 						watcherOptions: { relativePath, addDirToSet, addFileToSet, encoding },
 						infos: NeinthRuntime.getInfos(
@@ -53,6 +53,7 @@ export class NeinthWatcher extends NeinthComponent {
 					// @ts-expect-error
 					this.updateValue({ value, mode: 'mostRecent' });
 				});
+			};
 			this.withCleanUp(async () => {
 				const watcher = chokidar.watch(truePath).on('all', listener);
 				return {

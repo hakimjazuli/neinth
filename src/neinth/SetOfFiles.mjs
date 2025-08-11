@@ -1,7 +1,7 @@
 // @ts-check
 
 import { NeinthRuntime } from '../NeinthRuntime.mjs';
-import { trySync } from 'vivth';
+import { TrySync } from 'vivth';
 import { unlinkSync } from 'fs';
 
 /**
@@ -67,7 +67,7 @@ export class SetOfFiles extends Set {
 				return;
 			}
 			paths_.forEach((path_) => {
-				const [_, error] = trySync(() => {
+				const [_, error] = TrySync(() => {
 					unlinkSync(path_);
 				});
 				if (!error) {
@@ -138,7 +138,7 @@ export class SetOfFiles extends Set {
 			if (filesSet.has(filePath)) {
 				return;
 			}
-			const [_, error] = trySync(() => {
+			const [_, error] = TrySync(() => {
 				unlinkSync(NeinthRuntime.resolveProjectPath(filePath.toString()));
 			});
 			if (!error) {

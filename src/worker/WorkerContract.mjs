@@ -4,7 +4,7 @@ import { pathToFileURL } from 'url';
 import { Worker } from 'node:worker_threads';
 
 import { NeinthRuntime } from '../NeinthRuntime.mjs';
-import { trySync } from 'vivth';
+import { TrySync } from 'vivth';
 
 /**
  * @description
@@ -44,11 +44,11 @@ export class WorkerContract {
 	newContract = async (neinthWithCleanup) =>
 		await neinthWithCleanup(async () => {
 			let workerPath = NeinthRuntime.resolveProjectPath(this.WorkerPath).toString();
-			let [workerInstance, error] = trySync(() => {
+			let [workerInstance, error] = TrySync(() => {
 				return new Worker(workerPath);
 			});
 			if (error) {
-				[workerInstance, error] = trySync(() => {
+				[workerInstance, error] = TrySync(() => {
 					// @ts-expect-error
 					workerPath = pathToFileURL(workerPath);
 					return new Worker(workerPath);

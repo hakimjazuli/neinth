@@ -3,7 +3,7 @@
 import { NeinthRuntime } from '../NeinthRuntime.mjs';
 import { Dirent, statSync, readFileSync, Stats } from 'fs';
 import { basename, join, relative, extname, dirname } from 'path';
-import { trySync } from 'vivth';
+import { TrySync } from 'vivth';
 
 /**
  * @description
@@ -160,7 +160,7 @@ export class Infos {
 		if (this.isDirectory && !this.isFile) {
 			return undefined;
 		}
-		const [raw, error] = trySync(() => {
+		const [raw, error] = TrySync(() => {
 			return readFileSync(this._fullPath, this._encoding);
 		});
 		if (!error) {
@@ -179,13 +179,13 @@ export class Infos {
 	 */
 	get importAsModuleJS() {
 		const realTimePath = `${this._fullPath}?${Date.now()}`;
-		let [importedModule, error] = trySync(async () => {
+		let [importedModule, error] = TrySync(async () => {
 			return import(`file://${realTimePath}`);
 		});
 		if (!error) {
 			return importedModule;
 		}
-		[importedModule, error] = trySync(() => {
+		[importedModule, error] = TrySync(() => {
 			return import(realTimePath);
 		});
 		if (!error) {

@@ -2,7 +2,7 @@
 
 import { parentPort } from 'node:worker_threads';
 
-import { NewPingUnique, tryAsync } from 'vivth';
+import { PingUnique, TryAsync } from 'vivth';
 
 /**
  * @description
@@ -26,8 +26,8 @@ export class NeinthWorker {
 			 * @type {(this: NeinthWorker, message: JobParameter) => Promise<any>}
 			 */
 			async function (message) {
-				NewPingUnique('neinthWorker', async () => {
-					const [returnedVal, error] = await tryAsync(async () => {
+				new PingUnique('neinthWorker', async () => {
+					const [returnedVal, error] = await TryAsync(async () => {
 						return await onMessage(message);
 					});
 					if (error) {
